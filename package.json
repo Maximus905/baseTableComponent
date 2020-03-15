@@ -43,10 +43,13 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   },
-  "author": "",
+  "author": "Maximus905",
   "homepage": "",
   "license": "MIT",
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Maximus905/baseTableComponent.git"
+  },
   "keywords": [
     "react-component"
   ]
