@@ -1,0 +1,51 @@
+.test {
+    background-color: darkgreen;
+}
+.fixTableSizes {
+    table-layout: fixed !important;
+}
+.hiddenHeader th {
+    height: 0 !important;
+    font-size: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+.tBox {
+    height: 100%;
+    min-width: 500px; /* set a minimum width for table */
+    border: none; /* for example */
+}
+.tHdBdBox {
+    min-height: 0;
+    overflow-x: auto;
+}
+.tHdBox {
+
+}
+.tHdBox > table {
+    margin-bottom: 0 !important;
+}
+.tHdBoxSz {
+    /*width: calc(900px + 17px); !* = t-body-content.width + scroll width (t-body-content.width should be calculated with JS) *!*/
+}
+.tBdBox {
+    min-height: 0;
+    overflow: initial;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.noScroll {
+    overflow: hidden !important;
+}
+.tBdBox > table {
+    margin-bottom: 0 !important;
+}
+.tBdBoxSz {
+    /*width: calc(1600px + 17px); !* = t-body-content.width + scroll width (t-body-content.width should be calculated with JS) *!*/
+}
+.tFooterBox {
+
+}
+.tFooterBoxSz {
+    /* min-width: 600px; */
+}

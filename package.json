@@ -1,7 +1,7 @@
 {
-  "name": "example",
-  "version": "1.0.2",
-  "description": "component React component",
+  "name": "@rsb/simple-table",
+  "version": "1.0.1",
+  "description": "simple table based on bootstrap",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -19,11 +19,25 @@
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.9",
+    "check-types": "^11.1.2",
+    "classnames": "^2.2.6",
+    "fuse.js": "^4.0.4-beta",
+    "prop-types": "^15.7.2",
+    "react-scrollbar-size": "^2.1.0",
+    "react-window": "^1.8.5",
+    "reactstrap": "^8.4.1"
+  },
   "peerDependencies": {
-    "react": "16.x"
+    "react": "16.x",
+    "bootstrap": "^4.3.1"
   },
   "devDependencies": {
+    "bootstrap": "^4.4.1",
     "html-webpack-plugin": "^3.2.0",
     "nwb": "0.24.x",
     "react": "^16.13.0",
