@@ -2,7 +2,10 @@ const tableData = () => Array.from(Array(2), () => 0).map((value, index) => ({id
 const filterList = (accessor) => {
     switch (accessor) {
         case 'column1':
-            return tableData().map(item => item.column1)
+            const array = tableData().map(item => item.column1)
+            array.push(true)
+            array.push(false)
+            return array
         case 'column2':
             return tableData().map(item => item.column2)
     }
