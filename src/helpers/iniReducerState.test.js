@@ -125,8 +125,9 @@ const result = {
         custom_2: 'value 2'
     }
 }
-
-test('initial state for reducer', () => {
-    const config = getConfig()
-    expect(iniReducerState(config)).toEqual(result)
+describe('ini reducer state', () => {
+    test('iniReducerState', () => {
+        const config = getConfig()
+        expect(iniReducerState(config)).toEqual(result)
+    })
 })

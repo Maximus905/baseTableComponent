@@ -28,7 +28,23 @@ const config = {
             maxWidth: 500,
             sortable: true,
             filterable: true
-        }
+        },
+        {
+            accessor: 'column3',
+            title: 'column 3',
+            minWidth: 400,
+            maxWidth: 500,
+            sortable: true,
+            filterable: true
+        },
+        {
+            accessor: 'column4',
+            title: 'column 4',
+            minWidth: 400,
+            maxWidth: 500,
+            sortable: true,
+            filterable: true
+        },
     ]
 }
 export default config

@@ -33,6 +33,7 @@ export const filters_changeFilterType = ({filters, accessor, type}) => {
         return res
     }, {})
 }
+//is used in app_changeFilter
 export const filters_changeValue = ({filters, accessor, value, selectAllState}) => {
 
     const filterType = filters[accessor].type

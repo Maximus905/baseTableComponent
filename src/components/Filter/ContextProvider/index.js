@@ -14,8 +14,8 @@ export const DropdownContext = createContext()
 export const ContextProvider = (props) => {
     const {accessor, children, data, loadingState, filterSettings, filterSettings: {filterBy},
         maxHeight, maxWidth, fontRatio, bdColor,
-        emptyWildcard, valueFieldName, labelFieldName, checkedFieldName,
-        emptyListWildcard, loadingWildcard,
+        valueFieldName, labelFieldName, checkedFieldName,
+        emptyListWildcard, loadingWildcard, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard,
         openSettingsMenu, closeSettingsMenu,
         onChangeFilter: onChangeFilterExt, onSaveSettings: onSaveSettingsExt,
         onOpen: onOpenExt} = props
@@ -33,7 +33,8 @@ export const ContextProvider = (props) => {
     let checkedItemsCounter = data.length
 
     const [state, dispatch] = useReducer(rootReducer, {...initialState,
-        data: convertFilterList(data, labelFieldName, valueFieldName, emptyWildcard, initialState.selectAll, initialState.filterValue),
+        // data: convertFilterList(data, labelFieldName, valueFieldName, emptyWildcard, initialState.selectAll, initialState.filterValue),
+        data: convertFilterList({data, labelFieldName, valueFieldName, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, selectAllState: initialState.selectAll, filterValue: initialState.filterValue}),
         maxHeight, maxWidth,
         checkedItemsCounter,
         settingList: initialSettingList
@@ -55,7 +56,8 @@ export const ContextProvider = (props) => {
         const newState = {}
         if (currentType !== value) {
             const updatedFilterValue = filterValue.length > 0 ? [] : filterValue
-            const updatedFilterList = (value === ft.LIST.value) ? convertFilterList(data, labelFieldName, valueFieldName, emptyWildcard, true, updatedFilterValue) : state.data
+            // const updatedFilterList = (value === ft.LIST.value) ? convertFilterList(data, labelFieldName, valueFieldName, emptyWildcard, true, updatedFilterValue) : state.data
+            const updatedFilterList = (value === ft.LIST.value) ? convertFilterList({data, labelFieldName, valueFieldName, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, selectAllState: initialState.selectAll, filterValue: updatedFilterValue}) : state.data
             const updatedCheckedItemsCounter = updatedFilterList.reduce((acc, item) => item.checked ? ++acc : acc, 0)
             newState.settingList = settingList.map(item => ({...item, checked: item.value === value}))
             newState.filterValue = updatedFilterValue
@@ -95,7 +97,7 @@ export const ContextProvider = (props) => {
     }, [filterSettings])
     //update list of filter
     useEffect(() => {
-        dispatch(updateFilterList(convertFilterList(data, labelFieldName, valueFieldName, emptyWildcard, selectAllState, filterValue)))
+        dispatch(updateFilterList(convertFilterList({data, labelFieldName, valueFieldName, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, selectAllState, filterValue})))
     }, [data])
 
     //watch reopen signal (reopen === true), reset them and open filter
@@ -108,7 +110,7 @@ export const ContextProvider = (props) => {
     return (
         <DropdownContext.Provider value={{accessor, state, loadingState, dispatch,
             fontRatio, bdColor,
-            emptyWildcard, valueFieldName, labelFieldName, checkedFieldName,
+            emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, valueFieldName, labelFieldName, checkedFieldName,
             emptyListWildcard, loadingWildcard,
             openSettingsMenu, closeSettingsMenu,
             settingList, onClickSettingItem, onClickSaveSettings, toggleOpenState
@@ -118,7 +120,7 @@ export const ContextProvider = (props) => {
     )
 }
 ContextProvider.propTypes = {
-    data: PropTypes.arrayOf(oneOfType([PropTypes.object, PropTypes.string, PropTypes.number])),
+    data: PropTypes.arrayOf(oneOfType([PropTypes.object, PropTypes.string, PropTypes.number, PropTypes.bool])),
     filterListLoading: PropTypes.bool,
     maxHeight: PropTypes.number,
     maxWidth: PropTypes.number,

@@ -17,12 +17,18 @@ const Filter = (props) => {
         loadingState, //if list for LIST filter is not ready yet
         active, // if filter value for this filter isn't empty
         maxHeight, maxWidth,
+
         valueFieldName,
         labelFieldName,
         checkedFieldName,
+
         emptyWildcard,
         emptyListWildcard,
+        emptyValueWildcard,
+        trueWildcard,
+        falseWildcard,
         loadingWildcard,
+
         onChangeFilter: onChangeFilterExt,
         onSaveSettings: onSaveSettingsExt,
         onOpen,
@@ -79,7 +85,7 @@ const Filter = (props) => {
 Filter.propTypes = {
     ...DropdownBs.propTypes,
     accessor: PropTypes.string,
-    data: PropTypes.arrayOf(oneOfType([PropTypes.object, PropTypes.string, PropTypes.number]) ),
+    data: PropTypes.arrayOf(oneOfType([PropTypes.object, PropTypes.string, PropTypes.number, PropTypes.bool]) ),
     loadingState: PropTypes.bool,
     active: PropTypes.bool,
     maxHeight: PropTypes.number, // maxHeight of filterList in px
@@ -90,12 +96,18 @@ Filter.propTypes = {
     onOpen: PropTypes.func,
     //
     fontRatio: PropTypes.number,
+    //wildcards
+    emptyValueWildcard: PropTypes.string,
     emptyWildcard: PropTypes.string,
+    falseWildcard: PropTypes.string,
+    trueWildcard: PropTypes.string,
+    emptyListWildcard: PropTypes.string,
+    loadingWildcard: PropTypes.string,
+
     valueFieldName: PropTypes.string,
     labelFieldName: PropTypes.string,
     checkedFieldName: PropTypes.string,
-    emptyListWildcard: PropTypes.string,
-    loadingWildcard: PropTypes.string,
+
     opened: PropTypes.bool, //initial state of filter
     openSettings: PropTypes.bool, //initial state of filter's settings menu
     filterSettings: PropTypes.shape({
@@ -108,12 +120,18 @@ Filter.defaultProps = {
     active: false,
     fontRatio: 0.8,
     maxWidth: 200,
+
+    emptyValueWildcard: '',
     emptyWildcard: '<пусто>',
+    falseWildcard: 'false',
+    trueWildcard: 'true',
+    emptyListWildcard: 'нет элементов',
+    loadingWildcard: 'loading...',
+
     valueFieldName: 'val',
     labelFieldName: 'lab',
     checkedFieldName: 'checked',
-    emptyListWildcard: 'нет элементов',
-    loadingWildcard: 'loading...',
+
     opened: false,
     openSettings: false,
     onSaveSettings: ({accessor, newType}) => {},

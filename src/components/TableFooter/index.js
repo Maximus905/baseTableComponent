@@ -7,6 +7,7 @@ import TableContext from "../../TableContext";
 
 const TableFooter = (props) => {
     const {state: {dimensions: {tWidth, tBoxWidth}}} = useContext(TableContext)
+    console.log('tboxwidth', tBoxWidth, tWidth)
     const {darkTheme} = props
     const footerWidth = tWidth >= tBoxWidth ? tBoxWidth : tWidth
     return <div className={classNames("d-flex justify-content-between align-items-center p-1", darkTheme ? "text-white bg-dark" : "bg-light")} css={css`width: ${footerWidth}px`} >{props.children}</div>
