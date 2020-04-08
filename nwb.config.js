@@ -14,7 +14,7 @@ module.exports = {
     html: {
       template: 'demo/src/index.html',
       mountId: 'app',
-      title: 'Demo page 2'
+      title: 'Demo page'
     },
     styles: {
       css: [

@@ -15,9 +15,9 @@
     "clean": "nwb clean-module && nwb clean-demo",
     "prepublishOnly": "npm run build",
     "start": "nwb serve-react-demo",
-    "test": "jest --watch --no-cache",
-    "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server"
+    "test": "jest --no-cache",
+    "test:coverage": "jest --no-cache",
+    "test:watch": "jest --watch --no-cache"
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",

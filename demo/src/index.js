@@ -1,13 +1,12 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import {render} from 'react-dom'
-import Table from '../../src'
+import Table from "../../src";
 import simpleConfig from "./config/simpleConfig"
 import config_customCell_1 from "./config/config_customCell_1"
-// import style from './style.module.css'
-// import './style2.css'
 
-// minHeight style is very important for the deepest container!!!
+
+// minHeight style is very important for the deepest container because container is flex!!!
 const Demo = () => {
   return (
       <div style={{height: '100vh'}}>
