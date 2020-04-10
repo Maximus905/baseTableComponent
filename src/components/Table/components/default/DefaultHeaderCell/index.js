@@ -17,8 +17,8 @@ const emptyList = []
 const DefaultHeaderCell = ({accessor, renderSortIcon}) => {
     const {state: {filters, columnsSettings, filtersSettings, dimensions: {tBodyBoxHeight}}, dispatch, updateFilterList, emptyWildcard} = useContext(TableContext)
     const {title, sortable, filterable, width} = columnsSettings[accessor]
-    const filterList = filters[accessor].list || emptyList
-    const loadingState = filters[accessor].isLoading
+    const filterList = filterable && (filters[accessor].list || emptyList)
+    const loadingState = filterable && filters[accessor].isLoading
 
     const onChangeFilterHandler = ({accessor, filterBy, type, value, selectAllState}) => {
         dispatch(changeFilter({accessor, type, value, selectAllState}))

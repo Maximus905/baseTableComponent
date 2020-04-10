@@ -24,7 +24,7 @@ const config = {
             minWidth: 400,
             maxWidth: 500,
             sortable: true,
-            filterable: true
+            // filterable: true
         }
     ]
 }

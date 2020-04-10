@@ -207,7 +207,7 @@ Table.propTypes = {
         type: PropTypes.oneOf(Object.keys(ft)),
         allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
     }),
-    getTableData: PropTypes.func, // async function should return array of objects like {'accessor: 'value'}
+    getTableData: PropTypes.func, // async function ({filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
     custom: PropTypes.objectOf(PropTypes.any),
     getFilterList: PropTypes.func, //async function to get list for filter. async ({accessor, filters}) => ({})
     filterValueName: PropTypes.string, // is used in filter list object
