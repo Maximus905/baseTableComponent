@@ -1,2 +1,2 @@
-import Table from './components/Table'
+import Table from './Table'
 export default Table
