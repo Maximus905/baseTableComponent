@@ -9,12 +9,13 @@ import {
     addSorting,
     changeFilter,
 } from "../../../actions";
-import Filter from "../../Filter";
+import Filter from "../../Filter"
+import SortIcon from "../../SortIcon";
 
 
 const emptyList = []
 
-const DefaultHeaderCell = ({accessor, renderSortIcon}) => {
+const DefaultHeaderCell = ({accessor}) => {
     const {state: {filters, columnsSettings, filtersSettings, dimensions: {tBodyBoxHeight}}, dispatch, updateFilterList, emptyWildcard} = useContext(TableContext)
     const {title, sortable, filterable, width} = columnsSettings[accessor]
     const filterList = filterable && (filters[accessor].list || emptyList)
@@ -42,7 +43,7 @@ const DefaultHeaderCell = ({accessor, renderSortIcon}) => {
                 <div className={classNames('d-flex', 'justify-content-start')}>
                     {title}
                     <div css={css`margin-left: 5px; width: 25px; opacity: 0.5`} className={classNames('d-flex', 'justify-content-around', 'align-items-center')}>
-                        {sortable ? renderSortIcon(accessor) : undefined}
+                        {sortable && <SortIcon accessor={accessor} />}
                     </div>
                 </div>
                 {filterable && <Filter accessor={accessor} active={isFilterActive({accessor})} maxWidth={300} maxHeight={tBodyBoxHeight * 0.8} data={filterList} direction="down" filterSettings={filtersSettings[accessor]} onChangeFilter={onChangeFilterHandler} onOpen={onOpenFilter} loadingState={loadingState} emptyWildcard={emptyWildcard} />}

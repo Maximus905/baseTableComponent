@@ -1,4 +1,4 @@
 import React from 'react'
 
-const DefaultCell = ({accessor, rowData}) => (<td>{rowData[accessor]}</td>)
+const DefaultCell = ({accessor, rowData, rowIdx, width}) => (<td>{rowData[accessor]}</td>)
 export default DefaultCell

@@ -1,8 +1,4 @@
 import React from "react";
 
-/**
- * @param props
- * @return {*}
- */
-const DefaultRow = ({children}) => (<tr>{children}</tr>)
+const DefaultRow = ({children, rowData, rowIdx, columnsSettings}) => <tr>{children({rowData, rowIdx, columnsSettings})}</tr>
 export default DefaultRow

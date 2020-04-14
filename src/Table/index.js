@@ -6,25 +6,33 @@ import myCss from './style.module.css'
 //actions
 import {setScrollSizes, pageResizing, tableResizing, invalidateData, resetInvalidateDelay, requestFilterList} from "./actions";
 //components
-import HeaderRow from "./components/HeaderRow"
+// import HeaderRow from "./components/HeaderRow"
+import DefaultHeaderRow from "./components/default/DefaultHeaderRow"
+import DefaultRow from "./components/default/DefaultRow";
+
 import HeaderCell from "./components/HeaderCell";
 import ScrollCell from "./components/ScrollCell"
 import Spinner from "./components/Spiner";
-import Row from "./components/Row";
+// import Row from "./components/Row";
 import TableFooter from "./components/TableFooter";
 
 import ft from "./constatnts/filterTypes";
 import {useEvent} from "./hooks"
 import {rootReducer, dispatchMiddleware} from "./reducer"
 import {
-    app_convertFilters, app_convertPagination,
-    iniReducerState, renderCellFunctionsFromProps, renderHeaderCellFunctionsFromProps
+    app_convertFilters,
+    app_convertPagination,
+    iniReducerState,
+    // renderCellFunctionsFromProps,
+    // renderHeaderCellFunctionsFromProps,
+    headerCellsCollection,
+    bodyCellsCollection
 } from './helpers'
 import TableContext from "./TableContext"
 import {requestData, ctrlDown, ctrlUp} from "./actions";
 import classNames from "classnames";
 import ScrollbarSize from "react-scrollbar-size";
-import Cell from "./components/Cell";
+// import Cell from "./components/Cell";
 import SimpleHeaderCell from "./components/SimpleHeaderCell";
 import Pagination from "./components/Pagination";
 import GlobalSearch from "./components/GlobalSearch";
@@ -32,9 +40,13 @@ import RecordsCounter from "./components/RecordsCounter";
 
 const Table = props => {
     const {getTableData, table, columns, getFilterList, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
-    const {renderHeaderRow, renderRow} = table || {}
-    const renderCellFunctions = renderCellFunctionsFromProps(props)
-    const renderHeaderCellFunctions = renderHeaderCellFunctionsFromProps(props)
+    const {customHeaderRow, customRow} = table || {}
+    // const renderCellFunctions = renderCellFunctionsFromProps(props)
+    const HeaderRow = customHeaderRow || DefaultHeaderRow
+    const BodyRow = customRow || DefaultRow
+    // const renderHeaderCellFunctions = renderHeaderCellFunctionsFromProps(props)
+    const headerCells = headerCellsCollection(props)
+    const bodyCells = bodyCellsCollection(props)
     const [state, dispatch] = useReducer(rootReducer, props, iniReducerState)
     const asyncDispatch = dispatchMiddleware(dispatch)
     const {isLoading, didInvalidate,
@@ -118,10 +130,10 @@ const Table = props => {
         invalidateDataWithTimeout,
         getTableData,
         getFilterList,
-        renderHeaderRow,
-        renderHeaderCellFunctions,
-        renderRow,
-        renderCellFunctions,
+        // renderHeaderRow,
+        // renderHeaderCellFunctions,
+        // renderRow,
+        // bodyCells,
         filterLabelName,
         filterValueName,
         // filterCheckedName,
@@ -136,9 +148,15 @@ const Table = props => {
                     <div className={classNames(myCss.tHdBox, "bg-light")} css={css`width: ${tWidth + vScroll}px`}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead>
-                                <HeaderRow renderHeaderRow={renderHeaderRow} >
-                                    {visibleColumnsOrder.map((accessor, index) => <HeaderCell accessor={accessor} key={index} />)}
-                                    <ScrollCell vScroll={vScroll} />
+                                <HeaderRow>
+                                    {() => {
+                                        const cells = visibleColumnsOrder.map((accessor, idx) => {
+                                            const HeaderCell = headerCells[accessor]
+                                            return <HeaderCell accessor={accessor} key={idx}/>
+                                        })
+                                        cells.push(<ScrollCell vScroll={vScroll} key={'sc'} />)
+                                        return cells
+                                    }}
                                 </HeaderRow>
                             </thead>
                         </table>
@@ -146,15 +164,19 @@ const Table = props => {
                     <div className={classNames(myCss.tBdBox, isLoading ? myCss.noScroll : '', "bg-light", "flex-grow-1")} css={css`width: ${tWidth + vScroll}px;`} ref={refTableBodyBox}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-striped": tableStriped, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless, "table-hover": tableHover }, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead className={myCss.hiddenHeader}>
-                            <HeaderRow>
-                                {visibleColumnsOrder.map((accessor, index) => <SimpleHeaderCell accessor={accessor} key={index} />)}
-                            </HeaderRow>
+                                <HeaderRow>
+                                    {() => visibleColumnsOrder.map((accessor, idx) => <SimpleHeaderCell accessor={accessor} key={idx}/>)}
+                                </HeaderRow>
                             </thead>
                             <tbody>
                             {state.data.map((rowData, index) => (
-                                <Row key={index} rowData={rowData} index={index}>
-                                    {visibleColumnsOrder.map((accessor, index) => <Cell accessor={accessor} rowData={rowData} width={columnsSettings[accessor].width} key={index} />)}
-                                </Row>
+                                <BodyRow key={index} rowData={rowData} rowIdx={index} columnsSettings={columnsSettings}>
+                                    {({rowData, rowIdx, columnsSettings}) => visibleColumnsOrder.map((accessor, index) => {
+                                        const Cell = bodyCells[accessor]
+                                        const width = columnsSettings[accessor].width
+                                        return <Cell {...{accessor, rowData, rowIdx, width}} key={index} />
+                                    })}
+                                </BodyRow>
                             ))}
                             </tbody>
                         </table>
@@ -183,8 +205,10 @@ Table.propTypes = {
         tableHover: PropTypes.bool,
         //
         globalFilter: PropTypes.bool,
-        renderRow: PropTypes.func, // function for rendering row in Body of table
-        renderHeaderRow: PropTypes.func, // function for rendering row in a visible Header of table
+        // renderRow: PropTypes.func, // function for rendering row in Body of table
+        // renderHeaderRow: PropTypes.func, // function for rendering row in a visible Header of table
+        customRow: PropTypes.func, // customers row React component (i.e. CustomRow)
+        customHeaderRow: PropTypes.func, // customers row React component (i.e. CustomHeaderRow)
     }),
     columns: PropTypes.arrayOf(PropTypes.shape({
         title: PropTypes.string.isRequired,
@@ -199,8 +223,10 @@ Table.propTypes = {
             type: PropTypes.oneOf(Object.keys(ft)),
             allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
         }),
-        renderCell: PropTypes.func, // ({accessor, rowData}) => (<td>Your code here</td>)
-        renderHeaderCell: PropTypes.func, // ({accessor, columnsSettings}) => (<th>Your code here</th>)
+        // renderCell: PropTypes.func, // ({accessor, rowData}) => (<td>Your code here</td>)
+        customCell: PropTypes.func, // customers cell React component (i.e. CustomCell)
+        // renderHeaderCell: PropTypes.func, // ({accessor, columnsSettings}) => (<th>Your code here</th>)
+        customHeaderCell: PropTypes.func, // customers cell React component (i.e. CustomHeaderCell) (TODO)
     })),
     globalFilter: PropTypes.shape({
         filterBy: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),

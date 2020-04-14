@@ -7,13 +7,13 @@ import {
     emptyListFilterTemplate,
     paginationSettingsTemplate
 } from "../constatnts/initial"
+import DefaultHeaderCell from "../components/default/DefaultHeaderCell"
+import DefaultCell from "../components/default/DefaultCell"
 import filterTypes from "../constatnts/filterTypes";
 export * from './sortingHandler'
 export * from './filterHandlers'
 export * from './pagination'
-/**
- * @param props
- */
+
 export const tableSettingsFromProps = ({table}) => {
     const {renderRow, renderHeaderRow, ...restTabSettings} = table || {}
     return table ? {...tableSettingsTemplate, ...restTabSettings} : {...tableSettingsTemplate}
@@ -28,22 +28,21 @@ export const columnsSettingsFromProps = ({columns}) => (columns ?
         return acc
     }, {})
     : {})
-export const renderCellFunctionsFromProps = ({columns}) => (columns ?
+export const bodyCellsCollection = ({columns}) => (columns ?
     columns.reduce((acc, settings) => {
-        const {renderCell, accessor} = settings
-        acc[accessor] = renderCell
+        const {customCell, accessor} = settings
+        acc[accessor] = customCell || DefaultCell
         return acc
-    }, {})
-    : {})
-export const renderHeaderCellFunctionsFromProps = ({columns}) => (columns ?
+    }, {}) : {}
+)
+//TODO: using CustomHeaderCell. Now it doesn't work
+export const headerCellsCollection = ({columns}) => (columns ?
     columns.reduce((acc, settings) => {
-        const {renderHeaderCell, accessor} = settings
-        acc[accessor] = renderHeaderCell
+        const {accessor} = settings
+        acc[accessor] = DefaultHeaderCell
         return acc
-    }, {})
-    : {})
+    }, {}) : {})
 /**
- *
  * @param props
  * @return {Array}
  */

@@ -19,7 +19,7 @@ const config = {
                 type: 'LIST',
                 allowedTypes: [ft.EQ.value, ft.LIST.value]
             },
-            renderCell: ({accessor, rowData, width, invalidateDataWithTimeout}) => <Cell1 {...{accessor, rowData, width, invalidateDataWithTimeout}} />
+            customCell: Cell1
         },
         {
             accessor: 'column2',

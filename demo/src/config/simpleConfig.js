@@ -20,7 +20,7 @@ const config = {
         },
         {
             accessor: 'column2',
-            title: 'column 2',
+            title: 'column 2 not filterable',
             minWidth: 400,
             maxWidth: 500,
             sortable: true,
