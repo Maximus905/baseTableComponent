@@ -26,7 +26,7 @@ export const requestData = ({fetchFunction, filters, sorting, pagination, dataFi
  * @return {{type: string, payload: Object}}
  */
 export const receiveData = ({data, recordsCounter, showPagination}) => ({type: RECEIVE_DATA, payload: {data, recordsCounter, showPagination}})
-export const invalidateData = () => ({type: INVALIDATE_DATA})
+// export const invalidateData = () => ({type: INVALIDATE_DATA})
 
 export const loadingFilterList = (accessor) => ({type: LOADING_FILTER_LIST, payload: accessor})
 export const requestFilterList = ({fetchFunction, filters, accessor}) => ({type: REQUEST_FILTER_LIST, payload: {fetchFunction, filters, accessor}})

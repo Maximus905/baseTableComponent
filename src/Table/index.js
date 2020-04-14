@@ -10,7 +10,7 @@ import {setScrollSizes, pageResizing, tableResizing, invalidateData, resetInvali
 import DefaultHeaderRow from "./components/default/DefaultHeaderRow"
 import DefaultRow from "./components/default/DefaultRow";
 
-import HeaderCell from "./components/HeaderCell";
+// import HeaderCell from "./components/HeaderCell";
 import ScrollCell from "./components/ScrollCell"
 import Spinner from "./components/Spiner";
 // import Row from "./components/Row";
@@ -32,7 +32,6 @@ import TableContext from "./TableContext"
 import {requestData, ctrlDown, ctrlUp} from "./actions";
 import classNames from "classnames";
 import ScrollbarSize from "react-scrollbar-size";
-// import Cell from "./components/Cell";
 import SimpleHeaderCell from "./components/SimpleHeaderCell";
 import Pagination from "./components/Pagination";
 import GlobalSearch from "./components/GlobalSearch";
@@ -41,10 +40,8 @@ import RecordsCounter from "./components/RecordsCounter";
 const Table = props => {
     const {getTableData, table, columns, getFilterList, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
     const {customHeaderRow, customRow} = table || {}
-    // const renderCellFunctions = renderCellFunctionsFromProps(props)
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
-    // const renderHeaderCellFunctions = renderHeaderCellFunctionsFromProps(props)
     const headerCells = headerCellsCollection(props)
     const bodyCells = bodyCellsCollection(props)
     const [state, dispatch] = useReducer(rootReducer, props, iniReducerState)
@@ -130,10 +127,6 @@ const Table = props => {
         invalidateDataWithTimeout,
         getTableData,
         getFilterList,
-        // renderHeaderRow,
-        // renderHeaderCellFunctions,
-        // renderRow,
-        // bodyCells,
         filterLabelName,
         filterValueName,
         // filterCheckedName,
@@ -205,8 +198,6 @@ Table.propTypes = {
         tableHover: PropTypes.bool,
         //
         globalFilter: PropTypes.bool,
-        // renderRow: PropTypes.func, // function for rendering row in Body of table
-        // renderHeaderRow: PropTypes.func, // function for rendering row in a visible Header of table
         customRow: PropTypes.func, // customers row React component (i.e. CustomRow)
         customHeaderRow: PropTypes.func, // customers row React component (i.e. CustomHeaderRow)
     }),
@@ -223,9 +214,7 @@ Table.propTypes = {
             type: PropTypes.oneOf(Object.keys(ft)),
             allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
         }),
-        // renderCell: PropTypes.func, // ({accessor, rowData}) => (<td>Your code here</td>)
         customCell: PropTypes.func, // customers cell React component (i.e. CustomCell)
-        // renderHeaderCell: PropTypes.func, // ({accessor, columnsSettings}) => (<th>Your code here</th>)
         customHeaderCell: PropTypes.func, // customers cell React component (i.e. CustomHeaderCell) (TODO)
     })),
     globalFilter: PropTypes.shape({
