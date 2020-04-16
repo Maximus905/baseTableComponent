@@ -12,7 +12,8 @@ import {
     CHANGE_FILTER,
     LOADING_FILTER_LIST, REQUEST_FILTER_LIST, RECEIVE_FILTER_LIST,
     FIRST_PAGE, LAST_PAGE, NEXT_PAGE, PREV_PAGE,
-    CHANGE_ROWS_ON_PAGE
+    CHANGE_ROWS_ON_PAGE,
+    SELECT_CELL, DESELECT_CELL, SELECT_ROW, DESELECT_ROW, EDIT_CELL, SAVING_EDIT_RESULT, FINISH_EDIT_CELL
 } from "../constatnts/actions";
 import {
     calculateColumnsDim,
@@ -28,6 +29,7 @@ import {
     TIMEOUT_CHANGE_ROWS_ON_PAGE,
     TIMEOUT_CHANGE_SORTING
 } from "../constatnts/timeouts";
+import {changeSelectedCells} from "../helpers/selectAndEdit";
 
 /**
  * using for dispatching async actions like request data from server
@@ -145,6 +147,9 @@ export const rootReducer = (state, action) => {
             return {...state, pagination: {...pagination, currentPage: pagination.currentPage - 1}, invalidateWithDelay: TIMEOUT_CHANGE_PAGE_IN_PAGINATION}
         case CHANGE_ROWS_ON_PAGE:
             return {...state, pagination:app_updatePagination({pagination, recordsCounter: pagination.recordsCounter, rowsOnPage: payload}), invalidateWithDelay: TIMEOUT_CHANGE_ROWS_ON_PAGE}
+        case SELECT_CELL:
+            const res = changeSelectedCells({selectedCells: state.selectedCells, isCtrlPressed: state.isCtrlPressed, rowId: payload.rowId, accessor: payload.accessor})
+            return {...state, selectedCells: res, lastSelectedCell: {[payload.rowId]: payload.accessor}}
         default:
             return state
     }

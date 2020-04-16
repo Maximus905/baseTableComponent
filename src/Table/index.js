@@ -26,7 +26,8 @@ import {
     // renderCellFunctionsFromProps,
     // renderHeaderCellFunctionsFromProps,
     headerCellsCollection,
-    bodyCellsCollection
+    bodyCellsCollection,
+    isCellSelected
 } from './helpers'
 import TableContext from "./TableContext"
 import {requestData, ctrlDown, ctrlUp} from "./actions";
@@ -36,6 +37,7 @@ import SimpleHeaderCell from "./components/SimpleHeaderCell";
 import Pagination from "./components/Pagination";
 import GlobalSearch from "./components/GlobalSearch";
 import RecordsCounter from "./components/RecordsCounter";
+import {selectCell} from "./actions"
 
 const Table = props => {
     const {getTableData, table, columns, getFilterList, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
@@ -53,6 +55,7 @@ const Table = props => {
         columnsSettings,
         dimensions: {tWidth, vScroll, tBoxWidth},
         visibleColumnsOrder,
+        selectedCells
     } = state
     useEvent('resize', onResizeHandler)
     const refTableBox = useRef(null)
@@ -113,6 +116,12 @@ const Table = props => {
             return dispatch(ctrlUp())
         }
     }
+    // click handlers
+    function onClickCellsHandler({rowId, accessor}) {
+        return (e) => {
+            dispatch(selectCell({rowId, accessor}))
+        }
+    }
     // filters list handle
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
@@ -162,15 +171,20 @@ const Table = props => {
                                 </HeaderRow>
                             </thead>
                             <tbody>
-                            {state.data.map((rowData, index) => (
-                                <BodyRow key={index} rowData={rowData} rowIdx={index} columnsSettings={columnsSettings}>
-                                    {({rowData, rowIdx, columnsSettings}) => visibleColumnsOrder.map((accessor, index) => {
-                                        const Cell = bodyCells[accessor]
-                                        const width = columnsSettings[accessor].width
-                                        return <Cell {...{accessor, rowData, rowIdx, width}} key={index} />
-                                    })}
-                                </BodyRow>
-                            ))}
+                            {state.data.map((rowData, index) => {
+                                const selectedCellsInRow = selectedCells.get(index)
+                                return (
+                                    <BodyRow {...{key: index, rowData, rowId: index, columnsSettings, selectedCellsInRow, onClickCellsHandler}}>
+                                        {({rowData, rowId, columnsSettings, selectedCellsInRow, onClickCellsHandler}) => visibleColumnsOrder.map((accessor, index) => {
+                                            const Cell = bodyCells[accessor]
+                                            const width = columnsSettings[accessor].width
+                                            const selected = selectedCellsInRow && selectedCellsInRow.has(accessor)
+                                            const onClickHandler = onClickCellsHandler({rowId, accessor})
+                                            return <Cell {...{accessor, rowData, rowId, width, selected, onClickHandler}} key={index} />
+                                        })}
+                                    </BodyRow>
+                                )
+                            })}
                             </tbody>
                         </table>
                         {isLoading ? <Spinner/> : null}

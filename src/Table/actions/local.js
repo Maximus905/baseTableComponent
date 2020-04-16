@@ -20,7 +20,8 @@ import {
     SET_SCROLL_SIZES,
     //resizing
     PAGE_RESIZING,
-    TABLE_RESIZING, FIRST_PAGE, LAST_PAGE, NEXT_PAGE, PREV_PAGE, CHANGE_ROWS_ON_PAGE
+    TABLE_RESIZING, FIRST_PAGE, LAST_PAGE, NEXT_PAGE, PREV_PAGE, CHANGE_ROWS_ON_PAGE,
+    SELECT_CELL, DESELECT_CELL, SELECT_ROW, DESELECT_ROW, EDIT_CELL, SAVING_EDIT_RESULT, FINISH_EDIT_CELL
 } from '../constatnts/actions'
 //invalidate data
 export const invalidateData = () => ({type: INVALIDATE_DATA})
@@ -61,3 +62,9 @@ export const lastPage = () => ({type: LAST_PAGE})
 export const nextPage = () => ({type: NEXT_PAGE})
 export const prevPage = () => ({type: PREV_PAGE})
 export const changeRowsOnPage = (rowsOnPage) => ({type: CHANGE_ROWS_ON_PAGE, payload: rowsOnPage})
+//selection elements
+export const selectCell = ({rowId, accessor}) => ({type: SELECT_CELL, payload: {rowId, accessor}})
+export const deselectCell = ({rowId, accessor}) => ({type: DESELECT_CELL, payload: {rowId, accessor}})
+export const editCell = ({rowId, accessor}) => ({type: EDIT_CELL, payload: {rowId, accessor}})
+export const savingEditResult = ({rowId, accessor}) => ({type: SAVING_EDIT_RESULT, payload: {rowId, accessor}})
+export const finishEditCell = ({rowId, accessor}) => ({type: FINISH_EDIT_CELL, payload: {rowId, accessor}})

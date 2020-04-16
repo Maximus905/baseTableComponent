@@ -13,6 +13,7 @@ import filterTypes from "../constatnts/filterTypes";
 export * from './sortingHandler'
 export * from './filterHandlers'
 export * from './pagination'
+export * from './selectAndEdit'
 
 export const tableSettingsFromProps = ({table}) => {
     const {renderRow, renderHeaderRow, ...restTabSettings} = table || {}

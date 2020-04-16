@@ -1,4 +1,4 @@
 import React from "react";
 
-const DefaultRow = ({children, rowData, rowIdx, columnsSettings}) => <tr>{children({rowData, rowIdx, columnsSettings})}</tr>
+const DefaultRow = ({children, rowData, rowId, columnsSettings, selectedCellsInRow, onClickCellsHandler}) => <tr>{children({rowData, rowId, columnsSettings, selectedCellsInRow, onClickCellsHandler})}</tr>
 export default DefaultRow

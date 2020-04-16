@@ -1,5 +1,6 @@
 import ft from "../constatnts/filterTypes"
 import {tableSettingsFromProps, columnsSettingsFromProps, sortingFromProps, filtersSettingsFromProps, initialEmptyFiltersFromProps, iniReducerState} from "./index"
+import {Map} from "immutable";
 
 const getConfig = () => ({
     getTableData: () => {},
@@ -53,6 +54,9 @@ const result = {
             didInvalidate: false
         }
     },
+    selectedCells: Map(),
+    lastSelectedCell: {},
+    editingCell: {},
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,

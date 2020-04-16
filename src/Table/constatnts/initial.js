@@ -1,9 +1,13 @@
 import filterTypes from "./filterTypes";
+import {Map} from "immutable"
 
 export const initialState = {
     data: [],
     sorting: [],
     filters: {},
+    selectedCells: Map(), // like [rowId]: [accessors array] via immutable
+    lastSelectedCell: {}, // like[rowId]: accessor
+    editingCell: {}, // like [rowId]: accessor
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,
