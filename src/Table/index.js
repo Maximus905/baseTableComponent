@@ -4,7 +4,17 @@ import {useReducer, useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import myCss from './style.module.css'
 //actions
-import {setScrollSizes, pageResizing, tableResizing, invalidateData, resetInvalidateDelay, requestFilterList} from "./actions";
+import {
+    setScrollSizes,
+    pageResizing,
+    tableResizing,
+    invalidateData,
+    resetInvalidateDelay,
+    requestFilterList,
+    editCell,
+    finishEditCell,
+    changeDataInLocalStorage
+} from "./actions";
 //components
 // import HeaderRow from "./components/HeaderRow"
 import DefaultHeaderRow from "./components/default/DefaultHeaderRow"
@@ -38,9 +48,10 @@ import Pagination from "./components/Pagination";
 import GlobalSearch from "./components/GlobalSearch";
 import RecordsCounter from "./components/RecordsCounter";
 import {selectCell} from "./actions"
+import axios from "axios";
 
 const Table = props => {
-    const {getTableData, table, columns, getFilterList, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, getTableData, getFilterList, table, columns, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -55,11 +66,35 @@ const Table = props => {
         columnsSettings,
         dimensions: {tWidth, vScroll, tBoxWidth},
         visibleColumnsOrder,
-        selectedCells
+        selectedCells, editMode
     } = state
     useEvent('resize', onResizeHandler)
     const refTableBox = useRef(null)
     const refTableBodyBox = useRef(null)
+    const refCellEditor = useRef(null)
+    const outsideClickHandlers = useRef(new Set())
+    const subscribeOnOutsideClick = (handler) => {
+        outsideClickHandlers.current.add(handler)
+    }
+    const unsubscribeFromOutsideClick = (handler) => {
+        outsideClickHandlers.current.delete(handler)
+    }
+    const handlerClickOutside  = (e) => {
+        if (refCellEditor.current) {
+            const clickOutside = !refCellEditor.current.contains(e.target)
+            if (clickOutside && outsideClickHandlers.current.size > 0) {
+                for (let handler of outsideClickHandlers.current) handler()
+            }
+        }
+
+    }
+    useEffect(() => {
+        document.addEventListener('click', handlerClickOutside)
+        return function () {
+            document.removeEventListener('click', handlerClickOutside)
+        }
+    })
+
     useEffect(() => onResizeHandler(), [])
     useEffect(() => {
         dispatch(tableResizing())
@@ -122,6 +157,17 @@ const Table = props => {
             dispatch(selectCell({rowId, accessor}))
         }
     }
+    function onDoubleClickCellHandler({rowId, accessor}) {
+        return (e) => {
+            dispatch(editCell({rowId, accessor}))
+        }
+    }
+    function saveChangesLocally({rowId, rowData, accessor, cellData}) {
+        dispatch(changeDataInLocalStorage({rowId, rowData, accessor, cellData}))
+    }
+    function stopEdit() {
+        dispatch(finishEditCell())
+    }
     // filters list handle
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
@@ -134,6 +180,8 @@ const Table = props => {
         state,
         dispatch: asyncDispatch,
         invalidateDataWithTimeout,
+        tableDataUrl,
+        filterDataUrl,
         getTableData,
         getFilterList,
         filterLabelName,
@@ -177,10 +225,17 @@ const Table = props => {
                                     <BodyRow {...{key: index, rowData, rowId: index, columnsSettings, selectedCellsInRow, onClickCellsHandler}}>
                                         {({rowData, rowId, columnsSettings, selectedCellsInRow, onClickCellsHandler}) => visibleColumnsOrder.map((accessor, index) => {
                                             const Cell = bodyCells[accessor]
-                                            const width = columnsSettings[accessor].width
-                                            const selected = selectedCellsInRow && selectedCellsInRow.has(accessor)
-                                            const onClickHandler = onClickCellsHandler({rowId, accessor})
-                                            return <Cell {...{accessor, rowData, rowId, width, selected, onClickHandler}} key={index} />
+                                            const cellProps = {
+                                                accessor, rowData, rowId,
+                                                width: columnsSettings[accessor].width,
+                                                selected: selectedCellsInRow && selectedCellsInRow.has(accessor),
+                                                editMode: editMode[rowId] === accessor,
+                                                onClickHandler: onClickCellsHandler({rowId, accessor}),
+                                                onDoubleClickHandler: onDoubleClickCellHandler({rowId, accessor}),
+                                                refCellEditor,
+                                                subscribeOnOutsideClick, unsubscribeFromOutsideClick,
+                                                stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
+                                            return <Cell {...cellProps} key={index} />
                                         })}
                                     </BodyRow>
                                 )
@@ -236,13 +291,19 @@ Table.propTypes = {
         type: PropTypes.oneOf(Object.keys(ft)),
         allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
     }),
-    getTableData: PropTypes.func, // async function ({filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
+    getTableData: PropTypes.func, // async function ({url, filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
     custom: PropTypes.objectOf(PropTypes.any),
+    //urls
+    tableDataUrl: PropTypes.string,
+    saveChangesUrl: PropTypes.string, //if it doesn't set tableDataUrl will be used
+    filterDataUrl: PropTypes.string,
+    // getting filters data
     getFilterList: PropTypes.func, //async function to get list for filter. async ({accessor, filters}) => ({})
     filterValueName: PropTypes.string, // is used in filter list object
     filterLabelName: PropTypes.string, // is used in filter list object
     filterCheckedName: PropTypes.string, // is used in filter list object
     emptyWildcard: PropTypes.string,
+    // getting table data
     dataFieldName: PropTypes.string,
     dataCounterFieldName: PropTypes.string,
     //

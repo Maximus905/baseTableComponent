@@ -1,6 +1,7 @@
 import check from 'check-types'
 import {
-    CTRL_DOWN, CTRL_UP,
+    CTRL_DOWN,
+    CTRL_UP,
     PAGE_RESIZING,
     SET_SCROLL_SIZES,
     TABLE_RESIZING,
@@ -8,18 +9,33 @@ import {
     ADD_SORTING,
     INVALIDATE_DATA,
     RESET_INVALIDATE_DELAY,
-    LOADING_DATA, REQUEST_DATA, RECEIVE_DATA,
+    LOADING_DATA,
+    REQUEST_DATA,
+    RECEIVE_DATA,
     CHANGE_FILTER,
-    LOADING_FILTER_LIST, REQUEST_FILTER_LIST, RECEIVE_FILTER_LIST,
-    FIRST_PAGE, LAST_PAGE, NEXT_PAGE, PREV_PAGE,
+    LOADING_FILTER_LIST,
+    REQUEST_FILTER_LIST,
+    RECEIVE_FILTER_LIST,
+    FIRST_PAGE,
+    LAST_PAGE,
+    NEXT_PAGE,
+    PREV_PAGE,
     CHANGE_ROWS_ON_PAGE,
-    SELECT_CELL, DESELECT_CELL, SELECT_ROW, DESELECT_ROW, EDIT_CELL, SAVING_EDIT_RESULT, FINISH_EDIT_CELL
+    SELECT_CELL,
+    DESELECT_CELL,
+    SELECT_ROW,
+    DESELECT_ROW,
+    EDIT_CELL,
+    SAVING_EDIT_RESULT,
+    FINISH_EDIT_CELL,
+    SAVE_DATA_LOCAL
 } from "../constatnts/actions";
 import {
     calculateColumnsDim,
     tableWidth,
     changeSorting,
-    app_changeFilter, app_filters_setFilterInLoadingState, app_filters_receiveFilterList, app_updatePagination
+    app_changeFilter, app_filters_setFilterInLoadingState, app_filters_receiveFilterList, app_updatePagination,
+    changeData
 } from "../helpers";
 
 // import {changeSorting} from "../helpers/sortingHandler";
@@ -37,10 +53,10 @@ import {changeSelectedCells} from "../helpers/selectAndEdit";
  * @return {Function}
  */
 export function dispatchMiddleware(dispatch) {
-    async function getData({dispatch, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
+    async function getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
         dispatch(loadingData())
         try {
-            const data = await fetchFunction({filters, sorting, pagination})
+            const data = await fetchFunction({url, filters, sorting, pagination})
             if (check.array(data)) {
                 dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false}))
             } else if (check.object(data) && check.array(data[dataFieldName])) {
@@ -59,14 +75,14 @@ export function dispatchMiddleware(dispatch) {
             dispatch(receiveData({data: [], recordsCounter: null, showPagination: false}))
         }
     }
-    async function getFilterList({dispatch, fetchFunction, filters, accessor}) {
+    async function getFilterList({dispatch, url, fetchFunction, filters, accessor}) {
         dispatch(loadingFilterList(accessor))
         const tmp = Object.keys(filters).reduce((acc, key) => {
             if (key !==accessor) acc[key] = filters[key]
             return acc
         }, {})
         try {
-            const data = await fetchFunction({accessor,filters: tmp})
+            const data = await fetchFunction({url, accessor,filters: tmp})
             if (check.not.array(data)) {
                 console.log('Table: Error fetching filter data: ', data)
                 throw  new Error('Table: Error fetching filter data from server!')
@@ -150,6 +166,12 @@ export const rootReducer = (state, action) => {
         case SELECT_CELL:
             const res = changeSelectedCells({selectedCells: state.selectedCells, isCtrlPressed: state.isCtrlPressed, rowId: payload.rowId, accessor: payload.accessor})
             return {...state, selectedCells: res, lastSelectedCell: {[payload.rowId]: payload.accessor}}
+        case EDIT_CELL:
+            return {...state, editMode: {[payload.rowId]: payload.accessor}}
+        case FINISH_EDIT_CELL:
+            return {...state, editMode: {}}
+        case SAVE_DATA_LOCAL:
+            return {...state, data: changeData({data: state.data, rowData: payload.rowData, rowId: payload.rowId, accessor: payload.accessor, cellData: payload.cellData})}
         default:
             return state
     }

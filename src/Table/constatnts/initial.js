@@ -7,7 +7,7 @@ export const initialState = {
     filters: {},
     selectedCells: Map(), // like [rowId]: [accessors array] via immutable
     lastSelectedCell: {}, // like[rowId]: accessor
-    editingCell: {}, // like [rowId]: accessor
+    editMode: {}, // like [rowId]: accessor
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,

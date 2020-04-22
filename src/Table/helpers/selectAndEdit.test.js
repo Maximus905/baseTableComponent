@@ -1,5 +1,5 @@
 import {Map, Set} from "immutable";
-import {changeSelectedCells, isCellSelected} from "./selectAndEdit";
+import {changeSelectedCells, isCellSelected, changeData} from "./selectAndEdit";
 
 describe('select cell testing', () => {
     test("undefined rowId and accessor", () => {
@@ -113,5 +113,42 @@ describe("isCellSelected testing", () => {
         const accessor = 'c1'
         const res = isCellSelected({selectedCells, rowId, accessor})
         expect(res).toBeTruthy()
+    })
+})
+describe("change row in state.data", () => {
+    const row1 = {c1: 'v11', c2: 'v12'}
+    const row2 = {c1: 'v21', c2: 'v22'}
+    const data = [row1, row2]
+    test("change only cell, using accessor", () => {
+        const rowId = 0
+        const accessor = 'c1'
+        const cellData = 'newData'
+        const updatedRow = {c1: 'newData', c2: 'v12'}
+        const updatedData = [updatedRow, row2]
+        const res = changeData({data, rowId, accessor, cellData})
+        expect(res).toEqual(updatedData)
+    })
+    test("change row, accessor isn't used", () => {
+        const rowId = 0
+        const accessor = undefined
+        const cellData = 'newData'
+        const updatedRow = {c1: 'newData', c2: 'v12'}
+        const updatedData = [updatedRow, row2]
+        const res = changeData({data, rowId, rowData: updatedRow})
+        expect(res).toEqual(updatedData)
+    })
+    test("value not changed, accessor is used", () => {
+        const rowId = 0
+        const rowData = row1
+        const accessor = 'c1'
+        const cellData = 'v11'
+        const res = changeData({data, rowId, rowData, accessor, cellData})
+        expect(res).toBe(data)
+    })
+    test("value not changed, accessor isn't used", () => {
+        const rowId = 0
+        const rowData = row1
+        const res = changeData({data, rowId, rowData})
+        expect(res).toBe(data)
     })
 })

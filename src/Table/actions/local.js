@@ -15,13 +15,27 @@ import {
     SET_FILTER_TYPE,
     CHANGE_FILTER,
     //current table settings
-    SET_TABLE_WIDTH, SET_ALL_COLUMNS_SETTINGS, SET_ONE_COLUMN_SETTINGS,
+    SET_TABLE_WIDTH,
+    SET_ALL_COLUMNS_SETTINGS,
+    SET_ONE_COLUMN_SETTINGS,
     //scroll
     SET_SCROLL_SIZES,
     //resizing
     PAGE_RESIZING,
-    TABLE_RESIZING, FIRST_PAGE, LAST_PAGE, NEXT_PAGE, PREV_PAGE, CHANGE_ROWS_ON_PAGE,
-    SELECT_CELL, DESELECT_CELL, SELECT_ROW, DESELECT_ROW, EDIT_CELL, SAVING_EDIT_RESULT, FINISH_EDIT_CELL
+    TABLE_RESIZING,
+    FIRST_PAGE,
+    LAST_PAGE,
+    NEXT_PAGE,
+    PREV_PAGE,
+    CHANGE_ROWS_ON_PAGE,
+    SELECT_CELL,
+    DESELECT_CELL,
+    SELECT_ROW,
+    DESELECT_ROW,
+    EDIT_CELL,
+    SAVING_EDIT_RESULT,
+    FINISH_EDIT_CELL,
+    SAVE_DATA_LOCAL
 } from '../constatnts/actions'
 //invalidate data
 export const invalidateData = () => ({type: INVALIDATE_DATA})
@@ -66,5 +80,6 @@ export const changeRowsOnPage = (rowsOnPage) => ({type: CHANGE_ROWS_ON_PAGE, pay
 export const selectCell = ({rowId, accessor}) => ({type: SELECT_CELL, payload: {rowId, accessor}})
 export const deselectCell = ({rowId, accessor}) => ({type: DESELECT_CELL, payload: {rowId, accessor}})
 export const editCell = ({rowId, accessor}) => ({type: EDIT_CELL, payload: {rowId, accessor}})
+export const changeDataInLocalStorage = ({rowId, rowData, accessor, cellData}) => ({type: SAVE_DATA_LOCAL, payload: {rowId, rowData, accessor, cellData}})
 export const savingEditResult = ({rowId, accessor}) => ({type: SAVING_EDIT_RESULT, payload: {rowId, accessor}})
-export const finishEditCell = ({rowId, accessor}) => ({type: FINISH_EDIT_CELL, payload: {rowId, accessor}})
+export const finishEditCell = () => ({type: FINISH_EDIT_CELL})

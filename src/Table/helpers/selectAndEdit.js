@@ -1,4 +1,5 @@
 import {Map, Set} from "immutable";
+import axios from 'axios'
 
 export const changeSelectedCells = ({selectedCells, rowId, accessor, isCtrlPressed}) => {
     if (rowId === undefined || accessor === undefined) return selectedCells
@@ -14,4 +15,17 @@ export const changeSelectedCells = ({selectedCells, rowId, accessor, isCtrlPress
 export const isCellSelected = ({selectedCells,  rowId, accessor}) => {
     const row = selectedCells.get(rowId)
     return row ? row.has(accessor) : false
+}
+export const changeData = ({data, rowId, rowData, accessor, cellData}) => {
+    //if cellData or row the same - return untouched data
+    //if accessor is presented - update row in data using accessor
+    // else - update entire row in data
+    if (accessor !== undefined) {
+        if (data[rowId][accessor] === cellData) return data
+        const updatedRow = {...data[rowId], [accessor]: cellData}
+        return data.map((item, index) => index === rowId ? updatedRow : item)
+    } else {
+        if (data[rowId] === rowData) return data
+        return data.map((item, index) => index === rowId ? {...rowData} : item)
+    }
 }

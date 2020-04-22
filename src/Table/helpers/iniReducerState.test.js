@@ -56,7 +56,7 @@ const result = {
     },
     selectedCells: Map(),
     lastSelectedCell: {},
-    editingCell: {},
+    editMode: {},
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,

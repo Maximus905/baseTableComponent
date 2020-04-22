@@ -4,6 +4,7 @@ import {fetchTableData, fetchFilterList} from "../async";
 const config = {
     getTableData: fetchTableData,
     getFilterList: fetchFilterList,
+    saveChangesUrl: 'http://netcmdb-loc.rs.ru:8082/test/errorCode.json',
     columns: [
         {
             accessor: 'column1',

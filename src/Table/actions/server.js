@@ -12,6 +12,7 @@ import {
 export const loadingData = () => ({type: LOADING_DATA})
 /**
  *
+ * @param url
  * @param {any} fetchFunction
  * @param {Object} filters - from reducer state
  * @param {Object} sorting - from reducer state
@@ -19,7 +20,7 @@ export const loadingData = () => ({type: LOADING_DATA})
  * @param dataFieldName
  * @param dataCounterFieldName
  */
-export const requestData = ({fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) => ({type: REQUEST_DATA, payload: {fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}})
+export const requestData = ({url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) => ({type: REQUEST_DATA, payload: {url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}})
 /**
  *
  * @param {Object}
@@ -29,6 +30,6 @@ export const receiveData = ({data, recordsCounter, showPagination}) => ({type: R
 // export const invalidateData = () => ({type: INVALIDATE_DATA})
 
 export const loadingFilterList = (accessor) => ({type: LOADING_FILTER_LIST, payload: accessor})
-export const requestFilterList = ({fetchFunction, filters, accessor}) => ({type: REQUEST_FILTER_LIST, payload: {fetchFunction, filters, accessor}})
+export const requestFilterList = ({url, fetchFunction, filters, accessor}) => ({type: REQUEST_FILTER_LIST, payload: {url, fetchFunction, filters, accessor}})
 export const receiveFilterList = ({accessor, data}) => ({type: RECEIVE_FILTER_LIST, payload: {accessor, data}})
 export const invalidateFilterList = (accessor) => ({type: INVALIDATE_FILTER_LIST, payload: accessor})

@@ -24,6 +24,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
+    "axios": "^0.19.2",
     "check-types": "^11.1.2",
     "classnames": "^2.2.6",
     "fuse.js": "^4.0.4-beta",
@@ -38,8 +39,6 @@
     "react": "16.x"
   },
   "devDependencies": {
-    "@babel/node": "^7.8.7",
-    "@babel/register": "^7.9.0",
     "babel-jest": "^25.2.6",
     "bootstrap": "^4.4.1",
     "enzyme": "^3.11.0",
