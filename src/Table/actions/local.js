@@ -82,4 +82,4 @@ export const deselectCell = ({rowId, accessor}) => ({type: DESELECT_CELL, payloa
 export const editCell = ({rowId, accessor}) => ({type: EDIT_CELL, payload: {rowId, accessor}})
 export const changeDataInLocalStorage = ({rowId, rowData, accessor, cellData}) => ({type: SAVE_DATA_LOCAL, payload: {rowId, rowData, accessor, cellData}})
 export const savingEditResult = ({rowId, accessor}) => ({type: SAVING_EDIT_RESULT, payload: {rowId, accessor}})
-export const finishEditCell = () => ({type: FINISH_EDIT_CELL})
+export const finishEditCell = ({rowId, accessor}) => ({type: FINISH_EDIT_CELL, payload: {rowId, accessor}})

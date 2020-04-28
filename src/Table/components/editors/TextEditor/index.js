@@ -4,7 +4,7 @@ import {useEffect, useState, useRef} from 'react'
 import axios from 'axios'
 
 const editorStyle = css`
-  background-color: #0c5460;
+  background-color: #157b8d;
   input {
       width: 100%;
       height: 100%;
@@ -18,7 +18,7 @@ const editorStyle = css`
 `
 
 
-const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
+export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
     const url = saveChangesUrl || tableDataUrl
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
@@ -32,6 +32,10 @@ const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOn
     }, [])
 // save changes on server
     const saveResult = async () => {
+        if (mutableState.current === rowData[accessor]) {
+            stopEdit({rowId, accessor})
+            return
+        }
         try {
             setSaving(true)
             const serverResponse = await axios.post(url, {
@@ -47,7 +51,7 @@ const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOn
             alert(e.toString())
         }
         setSaving(false)
-        stopEdit()
+        stopEdit({rowId, accessor})
     }
     // handler for input
     const onChangeHandler = (e) => {
@@ -60,4 +64,3 @@ const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOn
         </td>
     )
 }
-export default TextEditor

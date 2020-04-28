@@ -30,6 +30,6 @@ export const receiveData = ({data, recordsCounter, showPagination}) => ({type: R
 // export const invalidateData = () => ({type: INVALIDATE_DATA})
 
 export const loadingFilterList = (accessor) => ({type: LOADING_FILTER_LIST, payload: accessor})
-export const requestFilterList = ({url, fetchFunction, filters, accessor}) => ({type: REQUEST_FILTER_LIST, payload: {url, fetchFunction, filters, accessor}})
+export const requestFilterList = ({url, fetchFunction, filters, accessor, dataFieldName}) => ({type: REQUEST_FILTER_LIST, payload: {url, fetchFunction, filters, accessor, dataFieldName}})
 export const receiveFilterList = ({accessor, data}) => ({type: RECEIVE_FILTER_LIST, payload: {accessor, data}})
 export const invalidateFilterList = (accessor) => ({type: INVALIDATE_FILTER_LIST, payload: accessor})

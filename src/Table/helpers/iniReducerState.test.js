@@ -3,8 +3,8 @@ import {tableSettingsFromProps, columnsSettingsFromProps, sortingFromProps, filt
 import {Map} from "immutable";
 
 const getConfig = () => ({
-    getTableData: () => {},
-    getFilterList: ({accessor, filters}) => {},
+    tableDataLoader: () => {},
+    filterDataLoader: ({accessor, filters}) => {},
     table: {
         tableDark: false,
         tableSmall: true,
@@ -56,7 +56,7 @@ const result = {
     },
     selectedCells: Map(),
     lastSelectedCell: {},
-    editMode: {},
+    cellsInEditMode: Map(),
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,
@@ -97,6 +97,7 @@ const result = {
             isVisible: true,
             filterable: false,
             sortable: false,
+            editable: false
         },
         title_2: {
             title: 'title 2',
@@ -107,6 +108,7 @@ const result = {
             filterable: true,
             isVisible: true,
             sortable: false,
+            editable: false
         },
     },
     visibleColumnsOrder: ['title_1', 'title_2'],

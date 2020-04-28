@@ -1,5 +1,5 @@
 import {Map, Set} from "immutable";
-import {changeSelectedCells, isCellSelected, changeData} from "./selectAndEdit";
+import {changeSelectedCells, isCellSelected, changeData, stopEditCell, startEditCell} from "./selectAndEdit";
 
 describe('select cell testing', () => {
     test("undefined rowId and accessor", () => {
@@ -150,5 +150,89 @@ describe("change row in state.data", () => {
         const rowData = row1
         const res = changeData({data, rowId, rowData})
         expect(res).toBe(data)
+    })
+})
+describe("stop edit cell", () => {
+    test("rowId isn't in cellsInEditMode edit cell is not in edit mode",  () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1'))
+        const rowId = 'r2'
+        const accessor = 'c2'
+        const res = stopEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r1').toJS()).toEqual(['c1'])
+    })
+    test("rowId exists in cellsInEditMode edit cell is not in edit mode",  () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1'))
+        const rowId = 'r1'
+        const accessor = 'c2'
+        const res = stopEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r1').toJS()).toEqual(['c1'])
+    })
+    test("rowId exists in cellsInEditMode edit cell is one in edit mode for this row",  () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1'))
+        const rowId = 'r1'
+        const accessor = 'c1'
+        const res = stopEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).not.toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(0)
+    })
+    test("rowId exists in cellsInEditMode, 2 cells are in edit mode for this row",  () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1', 'c2'))
+        const rowId = 'r1'
+        const accessor = 'c1'
+        const res = stopEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).not.toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r1').toJS()).toEqual(['c2'])
+    })
+    test("2 rowId are exist in cellsInEditMode, 1 cell is in edit mode for r1",  () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1')).set('r2', Set.of('c1'))
+        const rowId = 'r1'
+        const accessor = 'c1'
+        const res = stopEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).not.toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r2').toJS()).toEqual(['c1'])
+    })
+})
+describe("start edit cell", () => {
+    test("new rowId", () => {
+        const cellsInEditMode = Map().set('r2', Set.of('c2'))
+        const rowId = 'r1'
+        const accessor = 'c1'
+        const res = startEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).not.toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(2)
+        expect(res.get('r1').toJS()).toEqual(['c1'])
+        expect(res.get('r2').toJS()).toEqual(['c2'])
+    })
+    test("existed rowId, the same cell", () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1'))
+        const rowId = 'r1'
+        const accessor = 'c1'
+        const res = startEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r1').toJS()).toEqual(['c1'])
+    })
+    test("existed rowId, new cell", () => {
+        const cellsInEditMode = Map().set('r1', Set.of('c1'))
+        const rowId = 'r1'
+        const accessor = 'c2'
+        const res = startEditCell({cellsInEditMode, rowId, accessor})
+        expect(res).not.toBe(cellsInEditMode)
+        expect(Map.isMap(res)).toBeTruthy()
+        expect(res.size).toBe(1)
+        expect(res.get('r1').toJS()).toEqual(['c1', 'c2'])
     })
 })

@@ -13,8 +13,8 @@ import {
 } from "./index"
 
 const getConfig = () => ({
-    getTableData: () => {},
-    getFilterList: ({accessor, filters}) => {},
+    tableDataLoader: () => {},
+    filterDataLoader: ({accessor, filters}) => {},
     table: {
         tableDark: true,
         tableSmall: true,
@@ -46,8 +46,8 @@ const getConfig = () => ({
     ]
 })
 const getConfigWithListFilter = () => ({
-    getTableData: () => {},
-    getFilterList: ({accessor, filters}) => {},
+    tableDataLoader: () => {},
+    filterDataLoader: ({accessor, filters}) => {},
     table: {
         tableDark: true,
         tableSmall: true,
@@ -128,6 +128,7 @@ describe('Columns settings', () => {
                     isVisible: true,
                     filterable: false,
                     sortable: false,
+                    editable: false
                 },
                 title_2: {
                     title: 'title 2',
@@ -138,6 +139,7 @@ describe('Columns settings', () => {
                     filterable: true,
                     isVisible: true,
                     sortable: false,
+                    editable: false
                 },
             }
         )

@@ -7,7 +7,7 @@ export const initialState = {
     filters: {},
     selectedCells: Map(), // like [rowId]: [accessors array] via immutable
     lastSelectedCell: {}, // like[rowId]: accessor
-    editMode: {}, // like [rowId]: accessor
+    cellsInEditMode: Map(), // like [rowId]: accessor
     isCtrlPressed: false,
     isLoading: false,
     invalidateWithDelay: 200,
@@ -37,7 +37,7 @@ export const tableSettingsTemplate = {
     globalFilter: false,
     tableSmall: true,
     tableStriped: true,
-    tableDark: true,
+    tableDark: false,
     tableBordered: true,
     tableBorderless: false,
     tableHover: true
@@ -50,6 +50,7 @@ export const oneColumnSettingsTemplate = {
     isVisible: true,
     filterable: false,
     sortable: false,
+    editable: false
 }
 export const oneFilterSettingsTemplate = {
     filterBy: '',

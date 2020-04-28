@@ -2,6 +2,7 @@
 import {css, jsx} from "@emotion/core"
 import {useReducer, useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
+import axios from "axios";
 import myCss from './style.module.css'
 //actions
 import {
@@ -48,10 +49,10 @@ import Pagination from "./components/Pagination";
 import GlobalSearch from "./components/GlobalSearch";
 import RecordsCounter from "./components/RecordsCounter";
 import {selectCell} from "./actions"
-import axios from "axios";
+import {defaultTableDataLoader, defaultFilterDataLoader} from "./loaders";
 
 const Table = props => {
-    const {tableDataUrl, saveChangesUrl, filterDataUrl, getTableData, getFilterList, table, columns, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -66,7 +67,7 @@ const Table = props => {
         columnsSettings,
         dimensions: {tWidth, vScroll, tBoxWidth},
         visibleColumnsOrder,
-        selectedCells, editMode
+        selectedCells, cellsInEditMode
     } = state
     useEvent('resize', onResizeHandler)
     const refTableBox = useRef(null)
@@ -111,7 +112,8 @@ const Table = props => {
     useEffect(() => {
         if (!isLoading && didInvalidate && !isCtrlPressed) {
             const action = requestData({
-                fetchFunction: getTableData,
+                url: tableDataUrl,
+                fetchFunction: tableDataLoader,
                 filters: app_convertFilters({filters, emptyWildcard}),
                 sorting,
                 pagination: app_convertPagination({pagination}),
@@ -158,21 +160,27 @@ const Table = props => {
         }
     }
     function onDoubleClickCellHandler({rowId, accessor}) {
+        if (!columnsSettings[accessor].editable) {
+            return () =>{}
+        } else if (!columnsSettings[accessor].editor) {
+            return () =>{ console.log("Editor isn't assigned for column ", accessor)}
+        }
         return (e) => {
+
             dispatch(editCell({rowId, accessor}))
         }
     }
     function saveChangesLocally({rowId, rowData, accessor, cellData}) {
         dispatch(changeDataInLocalStorage({rowId, rowData, accessor, cellData}))
     }
-    function stopEdit() {
-        dispatch(finishEditCell())
+    function stopEdit({rowId, accessor}) {
+        dispatch(finishEditCell({rowId, accessor}))
     }
     // filters list handle
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
         if (filter.type === ft.LIST.value && filter.didInvalidate) {
-            asyncDispatch(requestFilterList({fetchFunction: getFilterList, filters: app_convertFilters({filters, emptyWildcard}), accessor}))
+            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyWildcard}), accessor, dataFieldName: filterDataFieldName}))
         }
     }
 
@@ -182,8 +190,8 @@ const Table = props => {
         invalidateDataWithTimeout,
         tableDataUrl,
         filterDataUrl,
-        getTableData,
-        getFilterList,
+        tableDataLoader,
+        filterDataLoader,
         filterLabelName,
         filterValueName,
         // filterCheckedName,
@@ -229,7 +237,8 @@ const Table = props => {
                                                 accessor, rowData, rowId,
                                                 width: columnsSettings[accessor].width,
                                                 selected: selectedCellsInRow && selectedCellsInRow.has(accessor),
-                                                editMode: editMode[rowId] === accessor,
+                                                editMode: cellsInEditMode.has(rowId) && cellsInEditMode.get(rowId).has(accessor),
+                                                editor: columnsSettings[accessor].editable && columnsSettings[accessor].editor,
                                                 onClickHandler: onClickCellsHandler({rowId, accessor}),
                                                 onDoubleClickHandler: onDoubleClickCellHandler({rowId, accessor}),
                                                 refCellEditor,
@@ -283,6 +292,8 @@ Table.propTypes = {
             type: PropTypes.oneOf(Object.keys(ft)),
             allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
         }),
+        editable: PropTypes.bool,
+        editor: PropTypes.elementType,
         customCell: PropTypes.func, // customers cell React component (i.e. CustomCell)
         customHeaderCell: PropTypes.func, // customers cell React component (i.e. CustomHeaderCell) (TODO)
     })),
@@ -291,17 +302,18 @@ Table.propTypes = {
         type: PropTypes.oneOf(Object.keys(ft)),
         allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
     }),
-    getTableData: PropTypes.func, // async function ({url, filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
+    tableDataLoader: PropTypes.func, // async function ({url, filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
     custom: PropTypes.objectOf(PropTypes.any),
     //urls
     tableDataUrl: PropTypes.string,
     saveChangesUrl: PropTypes.string, //if it doesn't set tableDataUrl will be used
     filterDataUrl: PropTypes.string,
     // getting filters data
-    getFilterList: PropTypes.func, //async function to get list for filter. async ({accessor, filters}) => ({})
+    filterDataLoader: PropTypes.func, //async function to get list for filter. async ({accessor, filters}) => ({})
+    filterDataFieldName: PropTypes.string,
     filterValueName: PropTypes.string, // is used in filter list object
     filterLabelName: PropTypes.string, // is used in filter list object
-    filterCheckedName: PropTypes.string, // is used in filter list object
+    // filterCheckedName: PropTypes.string, // is used in filter list object
     emptyWildcard: PropTypes.string,
     // getting table data
     dataFieldName: PropTypes.string,
@@ -312,9 +324,12 @@ Table.propTypes = {
     showTableFooter: PropTypes.bool,
 }
 Table.defaultProps = {
+    tableDataLoader: defaultTableDataLoader,
+    filterDataLoader: defaultFilterDataLoader,
+    filterDataFieldName: 'data',
     filterValueName: 'val',
     filterLabelName: 'lab',
-    filterCheckedName: 'checked',
+    // filterCheckedName: 'checked',
     emptyWildcard: '<пусто>',
     // format for fetching data from server: {[dataFieldName]: data, [dataCounterFieldName]: totalCountOfData}
     //totalCountOfData is used for pagination
@@ -327,3 +342,5 @@ Table.defaultProps = {
     showTableFooter: true,
 }
 export default Table
+export {TextEditor} from './components/editors/TextEditor'
+export {DropdownEditor} from './components/editors/DropdownEditor'

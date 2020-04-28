@@ -12,6 +12,24 @@ export const changeSelectedCells = ({selectedCells, rowId, accessor, isCtrlPress
         return selectedCells.set(rowId, cells.add(accessor))
     }
 }
+export const stopEditCell = ({cellsInEditMode, rowId, accessor}) => {
+    let cells = cellsInEditMode.get(rowId) || Set()
+    if (!cellsInEditMode.has(rowId)) return cellsInEditMode
+    if (cells.has(accessor)) {
+        if (cells.size === 1) {
+            return cellsInEditMode.delete(rowId)
+        } else {
+            return cellsInEditMode.set(rowId, cells.delete(accessor))
+        }
+    } else {
+        return cellsInEditMode
+    }
+}
+export const startEditCell = ({cellsInEditMode, rowId, accessor}) => {
+    let cells = cellsInEditMode.get(rowId) || Set()
+    if (cells.has(accessor)) return cellsInEditMode
+    return cellsInEditMode.set(rowId, cells.add(accessor))
+}
 export const isCellSelected = ({selectedCells,  rowId, accessor}) => {
     const row = selectedCells.get(rowId)
     return row ? row.has(accessor) : false

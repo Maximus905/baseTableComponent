@@ -4,6 +4,7 @@ import {render} from 'react-dom'
 import Table from "../../src";
 import simpleConfig from "./config/simpleConfig"
 import config_customCell_1 from "./config/config_customCell_1"
+import remoteServer from "./config/withRemoteServerConfig"
 
 
 // minHeight style is very important for the deepest container because container is flex!!!
@@ -20,6 +21,12 @@ const Demo = () => {
               <h5 className="align-self-center">Table 2</h5>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px'}}>
                   <Table {...config_customCell_1} />
+              </div>
+          </div>
+          <div style={{height: '70vh'}} className="d-flex flex-column">
+              <h5 className="align-self-center">Table 2</h5>
+              <div className="container-fluid flex-grow-1" style={{minHeight: '0px'}}>
+                  <Table {...remoteServer} />
               </div>
           </div>
       </div>

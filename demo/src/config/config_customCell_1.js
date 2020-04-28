@@ -4,8 +4,8 @@ import {fetchTableData, fetchFilterList} from "../async"
 import {Cell1} from "../customComponents/Cell1"
 
 const config = {
-    getTableData: fetchTableData,
-    getFilterList: fetchFilterList,
+    tableDataLoader: fetchTableData,
+    filterDataLoader: fetchFilterList,
     columns: [
         {
             accessor: 'column1',

@@ -7,9 +7,9 @@
 Simple  Table component
 
 Some of props definition:
-* __getTableData__ - async function
+* __tableDataLoader__ - async function
  ```javascript
-({url, filters, sorting, pagination}) => {}
+({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) => {}
 ```
  __url__ argument is got from props.tableDataUrl (see below)
  It should return object structure like this:
@@ -23,8 +23,26 @@ Some of props definition:
 }
 ```
 if the field **dataCounterFieldName** isn't presented in response, counter ow records and pagination won't be shown in the footer
+
+Default values:
+```javascript
+{
+    dataFieldName: 'data',
+    counterFieldName: 'counter'
+}
+```
 * __dataFieldName__ - field name for data in the structure above
-* __dataCounterFieldName__ - field name of record counter in the structure above. This number will be shonw in the footer as a records counter. And this number is also used for calculating pagination parameters. 
+* __dataCounterFieldName__ - field name of record counter in the structure above. This number will be shown in the footer as a records counter. And this number is also used for calculating pagination parameters. 
+
+Where are used dataFieldName and dataCounterFieldName?
+
+our server should send table data in structure like:
+```javascript
+{
+    [dataFieldName]: [table data],
+    [dataCounterFieldName]: number_of_records
+}
+```
 * __getFilterList__ - async function 
 ```javascript
 async ({url, accessor, filters}) => {}

@@ -35,7 +35,8 @@ import {
     tableWidth,
     changeSorting,
     app_changeFilter, app_filters_setFilterInLoadingState, app_filters_receiveFilterList, app_updatePagination,
-    changeData
+    changeData,
+    startEditCell, stopEditCell
 } from "../helpers";
 
 // import {changeSorting} from "../helpers/sortingHandler";
@@ -45,7 +46,7 @@ import {
     TIMEOUT_CHANGE_ROWS_ON_PAGE,
     TIMEOUT_CHANGE_SORTING
 } from "../constatnts/timeouts";
-import {changeSelectedCells} from "../helpers/selectAndEdit";
+import {changeSelectedCells} from "../helpers";
 
 /**
  * using for dispatching async actions like request data from server
@@ -56,7 +57,7 @@ export function dispatchMiddleware(dispatch) {
     async function getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
         dispatch(loadingData())
         try {
-            const data = await fetchFunction({url, filters, sorting, pagination})
+            const data = await fetchFunction({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
             if (check.array(data)) {
                 dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false}))
             } else if (check.object(data) && check.array(data[dataFieldName])) {
@@ -75,14 +76,14 @@ export function dispatchMiddleware(dispatch) {
             dispatch(receiveData({data: [], recordsCounter: null, showPagination: false}))
         }
     }
-    async function getFilterList({dispatch, url, fetchFunction, filters, accessor}) {
+    async function getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName}) {
         dispatch(loadingFilterList(accessor))
         const tmp = Object.keys(filters).reduce((acc, key) => {
             if (key !==accessor) acc[key] = filters[key]
             return acc
         }, {})
         try {
-            const data = await fetchFunction({url, accessor,filters: tmp})
+            const data = await fetchFunction({url, filters: tmp, accessor, dataFieldName})
             if (check.not.array(data)) {
                 console.log('Table: Error fetching filter data: ', data)
                 throw  new Error('Table: Error fetching filter data from server!')
@@ -95,12 +96,12 @@ export function dispatchMiddleware(dispatch) {
     }
     return (action) => {
         const {type, payload} = action
-        const {fetchFunction, filters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName} = payload || {}
+        const {url, fetchFunction, filters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName} = payload || {}
         switch (type) {
             case REQUEST_DATA:
-                return getData({dispatch, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
+                return getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
             case REQUEST_FILTER_LIST:
-                return getFilterList({dispatch, fetchFunction, filters, accessor})
+                return getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName})
             default:
                 return dispatch(action)
         }
@@ -108,7 +109,8 @@ export function dispatchMiddleware(dispatch) {
 }
 export const rootReducer = (state, action) => {
     const {payload, type} = action
-    const {dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate} = state
+    const {dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate, cellsInEditMode} = state
+    const {rowId, accessor, data, value} = payload || {}
     const newState = {}
     switch (type) {
         case CTRL_DOWN:
@@ -167,9 +169,9 @@ export const rootReducer = (state, action) => {
             const res = changeSelectedCells({selectedCells: state.selectedCells, isCtrlPressed: state.isCtrlPressed, rowId: payload.rowId, accessor: payload.accessor})
             return {...state, selectedCells: res, lastSelectedCell: {[payload.rowId]: payload.accessor}}
         case EDIT_CELL:
-            return {...state, editMode: {[payload.rowId]: payload.accessor}}
+            return {...state, cellsInEditMode: startEditCell({cellsInEditMode, rowId, accessor})}
         case FINISH_EDIT_CELL:
-            return {...state, editMode: {}}
+            return {...state, cellsInEditMode: stopEditCell({cellsInEditMode, rowId, accessor})}
         case SAVE_DATA_LOCAL:
             return {...state, data: changeData({data: state.data, rowData: payload.rowData, rowId: payload.rowId, accessor: payload.accessor, cellData: payload.cellData})}
         default:
