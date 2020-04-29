@@ -18,7 +18,7 @@ const editorStyle = css`
 `
 
 
-export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
+export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
     const url = saveChangesUrl || tableDataUrl
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
@@ -38,6 +38,7 @@ export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subs
         }
         try {
             setSaving(true)
+            setIsSaving(true)
             const serverResponse = await axios.post(url, {
                 rowId, rowData, accessor, cellData: mutableState.current
             })
@@ -51,6 +52,7 @@ export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subs
             alert(e.toString())
         }
         setSaving(false)
+        setIsSaving(false)
         stopEdit({rowId, accessor})
     }
     // handler for input

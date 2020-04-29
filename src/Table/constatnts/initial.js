@@ -10,6 +10,7 @@ export const initialState = {
     cellsInEditMode: Map(), // like [rowId]: accessor
     isCtrlPressed: false,
     isLoading: false,
+    isSaving: false, //should be set to true to prevent reload table data while changes is saving
     invalidateWithDelay: 200,
     didInvalidate: false,
     showPagination: true,

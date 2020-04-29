@@ -14,7 +14,7 @@ import {
     requestFilterList,
     editCell,
     finishEditCell,
-    changeDataInLocalStorage
+    changeDataInLocalStorage, savingInProcess
 } from "./actions";
 //components
 // import HeaderRow from "./components/HeaderRow"
@@ -60,7 +60,7 @@ const Table = props => {
     const bodyCells = bodyCellsCollection(props)
     const [state, dispatch] = useReducer(rootReducer, props, iniReducerState)
     const asyncDispatch = dispatchMiddleware(dispatch)
-    const {isLoading, didInvalidate,
+    const {isSaving, isLoading, didInvalidate,
         showPagination, showRecordsCounter, showGlobalSearch,
         invalidateWithDelay, sorting, filters, pagination, isCtrlPressed,
         tableSettings: {tableSmall, tableStriped, tableDark, tableBordered, tableBorderless, tableHover},
@@ -110,7 +110,7 @@ const Table = props => {
     }
     // reload data table according to isLoading and didInvalidate
     useEffect(() => {
-        if (!isLoading && didInvalidate && !isCtrlPressed) {
+        if (!isSaving && !isLoading && didInvalidate && !isCtrlPressed) {
             const action = requestData({
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
@@ -122,7 +122,7 @@ const Table = props => {
             })
             asyncDispatch(action)
         }
-    }, [isLoading, didInvalidate, isCtrlPressed])
+    }, [isSaving, isLoading, didInvalidate, isCtrlPressed])
 
     useEffect(() => {
     }, [filters]);
@@ -175,6 +175,9 @@ const Table = props => {
     }
     function stopEdit({rowId, accessor}) {
         dispatch(finishEditCell({rowId, accessor}))
+    }
+    function setIsSaving(status) {
+        dispatch(savingInProcess(status))
     }
     // filters list handle
     const updateFilterList = ({accessor}) => {
@@ -243,7 +246,7 @@ const Table = props => {
                                                 onDoubleClickHandler: onDoubleClickCellHandler({rowId, accessor}),
                                                 refCellEditor,
                                                 subscribeOnOutsideClick, unsubscribeFromOutsideClick,
-                                                stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
+                                                setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
                                             return <Cell {...cellProps} key={index} />
                                         })}
                                     </BodyRow>

@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faAngleDown} from "@fortawesome/free-solid-svg-icons"
 
 
-export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
+export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
     const url = saveChangesUrl || tableDataUrl
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
@@ -22,6 +22,7 @@ export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, 
         }
         try {
             setSaving(true)
+            setIsSaving(true)
             const serverResponse = await axios.post(url, {
                 rowId, rowData, accessor, cellData: mutableState.current
             })
@@ -35,8 +36,9 @@ export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, 
             alert(e.toString())
         }
         setSaving(false)
-        subscribeOnOutsideClick(stopEditCell)
-        // stopEditCell()
+        setIsSaving(false)
+        // subscribeOnOutsideClick(stopEditCell)
+        stopEditCell()
     }, [])
 
     useEffect(() => {

@@ -33,7 +33,7 @@ import {
     SELECT_ROW,
     DESELECT_ROW,
     EDIT_CELL,
-    SAVING_EDIT_RESULT,
+    IS_SAVING,
     FINISH_EDIT_CELL,
     SAVE_DATA_LOCAL
 } from '../constatnts/actions'
@@ -81,5 +81,5 @@ export const selectCell = ({rowId, accessor}) => ({type: SELECT_CELL, payload: {
 export const deselectCell = ({rowId, accessor}) => ({type: DESELECT_CELL, payload: {rowId, accessor}})
 export const editCell = ({rowId, accessor}) => ({type: EDIT_CELL, payload: {rowId, accessor}})
 export const changeDataInLocalStorage = ({rowId, rowData, accessor, cellData}) => ({type: SAVE_DATA_LOCAL, payload: {rowId, rowData, accessor, cellData}})
-export const savingEditResult = ({rowId, accessor}) => ({type: SAVING_EDIT_RESULT, payload: {rowId, accessor}})
+export const savingInProcess = (status) => ({type: IS_SAVING, payload: status})
 export const finishEditCell = ({rowId, accessor}) => ({type: FINISH_EDIT_CELL, payload: {rowId, accessor}})

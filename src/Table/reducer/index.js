@@ -26,7 +26,7 @@ import {
     SELECT_ROW,
     DESELECT_ROW,
     EDIT_CELL,
-    SAVING_EDIT_RESULT,
+    IS_SAVING,
     FINISH_EDIT_CELL,
     SAVE_DATA_LOCAL
 } from "../constatnts/actions";
@@ -109,7 +109,7 @@ export function dispatchMiddleware(dispatch) {
 }
 export const rootReducer = (state, action) => {
     const {payload, type} = action
-    const {dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate, cellsInEditMode} = state
+    const {isSaving, dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate, cellsInEditMode} = state
     const {rowId, accessor, data, value} = payload || {}
     const newState = {}
     switch (type) {
@@ -174,6 +174,8 @@ export const rootReducer = (state, action) => {
             return {...state, cellsInEditMode: stopEditCell({cellsInEditMode, rowId, accessor})}
         case SAVE_DATA_LOCAL:
             return {...state, data: changeData({data: state.data, rowData: payload.rowData, rowId: payload.rowId, accessor: payload.accessor, cellData: payload.cellData})}
+        case IS_SAVING:
+            return {...state, isSaving: payload}
         default:
             return state
     }
