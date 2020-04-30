@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faAngleDown} from "@fortawesome/free-solid-svg-icons"
 
 
-export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
+export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl, tBodyHeight}) => {
     const url = saveChangesUrl || tableDataUrl
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
@@ -74,7 +74,7 @@ export const DropdownEditor = ({accessor, rowData, rowId, width, refCellEditor, 
     }
     return (
         <td ref={refCellEditor}>
-            <DropdownList onOpen={onOpenHandler} onClose={onCloseHandler} onChangeSelected={onChangeHandler} buttonContainerWidth="100%" buttonIcon={Icon1} dataUrl={filterDataUrl} accessor={accessor} widthMenuLikeButton={true} selected={[value]} closeAfterSelect />
+            <DropdownList onOpen={onOpenHandler} onClose={onCloseHandler} onChangeSelected={onChangeHandler} buttonContainerWidth="100%" buttonIcon={Icon1} dataUrl={filterDataUrl} accessor={accessor} maxHeight={tBodyHeight * 0.8} widthMenuLikeButton={true} selected={[value]} closeAfterSelect />
         </td>
     )
 }

@@ -65,12 +65,13 @@ const Table = props => {
         invalidateWithDelay, sorting, filters, pagination, isCtrlPressed,
         tableSettings: {tableSmall, tableStriped, tableDark, tableBordered, tableBorderless, tableHover},
         columnsSettings,
-        dimensions: {tWidth, vScroll, tBoxWidth},
+        dimensions: {tWidth, vScroll, tBoxWidth, tBodyBoxHeight},
         visibleColumnsOrder,
         selectedCells, cellsInEditMode
     } = state
     useEvent('resize', onResizeHandler)
     const refTableBox = useRef(null)
+    const refTableHeaderBox = useRef(null)
     const refTableBodyBox = useRef(null)
     const refCellEditor = useRef(null)
     const outsideClickHandlers = useRef(new Set())
@@ -96,7 +97,9 @@ const Table = props => {
         }
     })
 
-    useEffect(() => onResizeHandler(), [])
+    useEffect(() => {
+        if (isLoading === false) onResizeHandler()
+    }, [isLoading])
     useEffect(() => {
         dispatch(tableResizing())
     }, [tBoxWidth, vScroll, props.columns])
@@ -110,7 +113,7 @@ const Table = props => {
     }
     // reload data table according to isLoading and didInvalidate
     useEffect(() => {
-        if (!isSaving && !isLoading && didInvalidate && !isCtrlPressed) {
+        if (!isLoading && didInvalidate && !isCtrlPressed) {
             const action = requestData({
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
@@ -122,7 +125,7 @@ const Table = props => {
             })
             asyncDispatch(action)
         }
-    }, [isSaving, isLoading, didInvalidate, isCtrlPressed])
+    }, [isLoading, didInvalidate, isCtrlPressed])
 
     useEffect(() => {
     }, [filters]);
@@ -204,9 +207,9 @@ const Table = props => {
     // const sorter = (accessor) => (<Sorter accessor={accessor} />)
     return (
         <TableContext.Provider value={context}>
-            <div className={classNames(myCss.tBox, "d-flex", "flex-column", "bg-light")} ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
-                <div className={classNames(myCss.tHdBdBox, isLoading ? myCss.noScroll : '', "d-flex", "flex-column", "flex-grow-1", "position-relative")}>
-                    <div className={classNames(myCss.tHdBox, "bg-light")} css={css`width: ${tWidth + vScroll}px`}>
+            <div className={classNames(myCss.tBox, "d-flex", "flex-column", "bg-light, tBox")} ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
+                <div className={classNames(myCss.tHdBdBox, isLoading ? myCss.noScroll : '', "d-flex", "flex-column", "flex-grow-1, tHdBdBox", "position-relative")}>
+                    <div className={classNames(myCss.tHdBox, "bg-light, tHdBox")} css={css`width: ${tWidth + vScroll}px`} ref={refTableHeaderBox}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead>
                                 <HeaderRow>
@@ -222,7 +225,7 @@ const Table = props => {
                             </thead>
                         </table>
                     </div>
-                    <div className={classNames(myCss.tBdBox, isLoading ? myCss.noScroll : '', "bg-light", "flex-grow-1")} css={css`width: ${tWidth + vScroll}px;`} ref={refTableBodyBox}>
+                    <div className={classNames(myCss.tBdBox, isLoading ? myCss.noScroll : '', "bg-light", "flex-grow-1, tBdBox")} css={css`width: ${tWidth + vScroll}px;`} ref={refTableBodyBox}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-striped": tableStriped, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless, "table-hover": tableHover }, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead className={myCss.hiddenHeader}>
                                 <HeaderRow>
@@ -239,6 +242,7 @@ const Table = props => {
                                             const cellProps = {
                                                 accessor, rowData, rowId,
                                                 width: columnsSettings[accessor].width,
+                                                tBodyHeight: tBodyBoxHeight,
                                                 selected: selectedCellsInRow && selectedCellsInRow.has(accessor),
                                                 editMode: cellsInEditMode.has(rowId) && cellsInEditMode.get(rowId).has(accessor),
                                                 editor: columnsSettings[accessor].editable && columnsSettings[accessor].editor,

@@ -25,7 +25,7 @@ IconButton.defaultProps = {
 }
 
 const DropdownList = (props) => {
-    const {valueList, activeValue, onChange} = props
+    const {valueList, activeValue, onChange, disabled} = props
     const {darkTheme} = props
     const base = {
         height: 'calc(1em + 0.75rem + 2px)'
@@ -44,7 +44,7 @@ const DropdownList = (props) => {
         backgroundColor: '#343a40',
         color: '#fff',
     }
-    return (<InputBs type="select" css={darkTheme ? [base, darkStyle] : base} bsSize="sm" onChange={onChange} value={activeValue} >
+    return (<InputBs type="select" css={darkTheme ? [base, darkStyle] : base} bsSize="sm" onChange={onChange} value={activeValue} disabled={disabled} >
         {valueList.map((item, key) => <option css={darkTheme ? darkOption : ''} key={key}>{item}</option>)}
     </InputBs>)
 }
@@ -61,7 +61,7 @@ DropdownList.defaultProps = {
 
 const Pagination = (props) => {
     const {darkTheme} = props
-    const {dispatch, state: {isLoading, showPagination, pagination: {recordsCounter, currentPage, rowsOnPage, rowsOnPageList, totalPages}}} = useContext(TableContext)
+    const {dispatch, state: {isLoading, isSaving, showPagination, pagination: {recordsCounter, currentPage, rowsOnPage, rowsOnPageList, totalPages}}} = useContext(TableContext)
     const onFirstPage = () => dispatch(firstPage())
     const onLastPage = () => dispatch(lastPage())
     const onNextPage = () => dispatch(nextPage())
@@ -74,16 +74,16 @@ const Pagination = (props) => {
             "border rounded d-flex align-items-center justify-content-between p-1",
             darkTheme ? "text-white bg-dark border-light" : "bg-light border-dark")} css={css`width: 300px`}>
             <div>
-                <IconButton icon={faFastBackward} className="mr-1" disabled={recordsCounter === null || currentPage === 1 || isLoading} onClick={onFirstPage} />
-                <IconButton icon={faBackward} disabled={recordsCounter === null || currentPage === 1 || isLoading} onClick={onPrevPage} />
+                <IconButton icon={faFastBackward} className="mr-1" disabled={isSaving || recordsCounter === null || currentPage === 1 || isLoading} onClick={onFirstPage} />
+                <IconButton icon={faBackward} disabled={isSaving || recordsCounter === null || currentPage === 1 || isLoading} onClick={onPrevPage} />
             </div>
             <div css={css`white-space: nowrap`}>Page {currentPage} of {totalPages}</div>
             <div>
-                <IconButton icon={faForward} className="mr-1" disabled={recordsCounter === null || currentPage === totalPages || isLoading} onClick={onNextPage} />
-                <IconButton icon={faFastForward} disabled={recordsCounter === null || currentPage === totalPages || isLoading} onClick={onLastPage} />
+                <IconButton icon={faForward} className="mr-1" disabled={isSaving || recordsCounter === null || currentPage === totalPages || isLoading} onClick={onNextPage} />
+                <IconButton icon={faFastForward} disabled={isSaving || recordsCounter === null || currentPage === totalPages || isLoading} onClick={onLastPage} />
             </div>
             <div>
-                <DropdownList darkTheme={darkTheme} valueList={rowsOnPageList} activeValue={rowsOnPage} onChange={(e) => onChangeRowsOnPage(e.target.value)}  />
+                <DropdownList disabled={isSaving} darkTheme={darkTheme} valueList={rowsOnPageList} activeValue={rowsOnPage} onChange={(e) => onChangeRowsOnPage(e.target.value)}  />
             </div>
         </div>
 }

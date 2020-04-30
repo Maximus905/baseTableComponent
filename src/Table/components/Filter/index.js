@@ -12,6 +12,7 @@ import FilterBody from "./components/FilterBody";
 
 const Filter = (props) => {
     const {
+        disabled,
         accessor,
         data, //filter list for LIST type
         loadingState, //if list for LIST filter is not ready yet
@@ -35,8 +36,8 @@ const Filter = (props) => {
         fontRatio,
         opened,
         openSettings,
-        filterSettings,
-        ...bsProps} = props
+        filterSettings
+    } = props
     const bdColor = 'rgb(206,212,218)'
     const offset = {
         enabled: true,
@@ -66,15 +67,13 @@ const Filter = (props) => {
         openSettingsMenu,
         closeSettingsMenu,
     }
-
     return (
         <ContextProvider {...filterContext} >
-            <Dropdown {...bsProps} onClick={(e) => {
+            <Dropdown onClick={(e) => {
                 e.stopPropagation()
-            }}>
-                <DropdownButton active={active} />
+            }} direction='down' >
+                <DropdownButton active={active} disabled={disabled} />
                 <DropdownMenu modifiers={{offset}} right >
-                    {/*{ !showSettings && filter()}*/}
                     { !showSettings && <FilterBody />}
                     { showSettings && <SettingsMenu />}
                 </DropdownMenu>
@@ -84,10 +83,12 @@ const Filter = (props) => {
 }
 Filter.propTypes = {
     ...DropdownBs.propTypes,
+    disabled: PropTypes.bool,
     accessor: PropTypes.string,
     data: PropTypes.arrayOf(oneOfType([PropTypes.object, PropTypes.string, PropTypes.number, PropTypes.bool]) ),
     loadingState: PropTypes.bool,
-    active: PropTypes.bool,
+    active: PropTypes.bool, //highlight icon if active
+    //dropdown props
     maxHeight: PropTypes.number, // maxHeight of filterList in px
     maxWidth: PropTypes.number, // maxWidth of filterList in px
     //handlers
@@ -117,8 +118,10 @@ Filter.propTypes = {
     }),
 }
 Filter.defaultProps = {
+    disabled: true,
     active: false,
     fontRatio: 0.8,
+    dropdownDirection: 'down',
     maxWidth: 200,
 
     emptyValueWildcard: '',

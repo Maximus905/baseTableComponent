@@ -9,7 +9,7 @@ const selectedCss = css`
 
 const DefaultCell = (
     {
-        accessor,rowData, rowId, width, selected,
+        accessor,rowData, rowId, width, tBodyHeight, selected,
         editMode,
         editor: Editor,
         onClickHandler,
@@ -19,7 +19,7 @@ const DefaultCell = (
         setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
 ) => (
     editMode && Editor ?
-        <Editor {...{accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}} /> :
+        <Editor {...{accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl, tBodyHeight}} /> :
         <td onClick={onClickHandler} onDoubleClick={onDoubleClickHandler} css={selected ? selectedCss : null}>
             {rowData[accessor]}
         </td>

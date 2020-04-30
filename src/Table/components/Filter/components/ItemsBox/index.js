@@ -33,6 +33,7 @@ const longestRowIndex = ({data, fieldName}) => {
 
 const ItemsBox = (props) => {
     const {loadingState, loadingWildcard, emptyListWildcard, state: {maxHeight, maxWidth, data, itemWidth, itemHeight, inputValue}, dispatch} = useContext(DropdownContext)
+
     const itemRef = createRef()
     const fuseOption = {
         shouldSort: true,

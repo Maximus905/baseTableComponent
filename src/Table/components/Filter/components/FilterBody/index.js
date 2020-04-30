@@ -20,6 +20,7 @@ const DropdownFilter = ({isEmpty, loadingState}) => (
 )
 
 const FilterBody = () => {
+
     const {loadingState, state: {settingList, data, isOpened}} = useContext(DropdownContext)
     if (!isOpened) return null
     const filterType = settingList.reduce((acc, item) => item.checked ? item.value : acc, '')
