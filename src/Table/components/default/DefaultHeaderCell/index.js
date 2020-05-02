@@ -1,5 +1,6 @@
 /**@jsx jsx*/
 import {css, jsx} from "@emotion/core";
+import {useTheme} from "emotion-theming";
 import {useContext} from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -37,16 +38,28 @@ const DefaultHeaderCell = ({accessor}) => {
             // invalidateDataWithTimeout(TIMEOUT_CHANGE_SORTING)
         }
     }
+    const thm = useTheme()
+    const thCss = css`
+      width: ${width}px;
+      cursor: default;
+    `
+    const iconWrapCss = css`
+      margin-left: 5px;
+      width: 25px;
+      opacity: 0.7;
+      color: ${thm.hd.iconColor}
+    `
+    const filterListMaxHeight = tBodyBoxHeight - 70 > 20 ? tBodyBoxHeight - 70 : 20
     return (
-        <th css={css`width: ${width}px; cursor: default`} className={classNames('align-top')} onClick={!isSaving && sortable ? handlerOnClick : undefined} >
+        <th css={thCss} className={classNames('align-top')} onClick={!isSaving && sortable ? handlerOnClick : undefined} >
             <div className={classNames('d-flex', 'justify-content-between')}>
                 <div className={classNames('d-flex', 'justify-content-start')}>
                     {title}
-                    <div css={css`margin-left: 5px; width: 25px; opacity: 0.5`} className={classNames('d-flex', 'justify-content-around', 'align-items-center')}>
+                    <div css={iconWrapCss} className={classNames('d-flex', 'justify-content-around', 'align-items-center')}>
                         {sortable && <SortIcon accessor={accessor} />}
                     </div>
                 </div>
-                {filterable && <Filter accessor={accessor} active={isFilterActive({accessor})} disabled={isSaving} maxWidth={300} maxHeight={tBodyBoxHeight * 0.8} data={filterList} direction="down" filterSettings={filtersSettings[accessor]} onChangeFilter={onChangeFilterHandler} onOpen={onOpenFilter} loadingState={loadingState} emptyWildcard={emptyWildcard} />}
+                {filterable && <Filter accessor={accessor} active={isFilterActive({accessor})} disabled={isSaving} maxWidth={300} maxHeight={filterListMaxHeight} data={filterList} direction="down" filterSettings={filtersSettings[accessor]} onChangeFilter={onChangeFilterHandler} onOpen={onOpenFilter} loadingState={loadingState} emptyWildcard={emptyWildcard} />}
             </div>
         </th>
     )

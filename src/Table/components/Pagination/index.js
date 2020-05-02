@@ -1,5 +1,6 @@
 /**@jsx jsx*/
 import {jsx, css} from "@emotion/core"
+import {useTheme} from "emotion-theming"
 import PropTypes from 'prop-types'
 import {Button as ButtonBs, Input as InputBs} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -11,7 +12,19 @@ import {changeRowsOnPage, firstPage, lastPage, nextPage, prevPage} from "../../a
 
 const IconButton = (props) => {
     const {icon, fontSize, ...rest} = props
-    return <ButtonBs outline size={"sm"} css={css`padding: 0.25rem; line-height: 1; font-size: ${props.fontSize}rem; color: #b8b8b8`} {...rest}><FontAwesomeIcon icon={icon}/></ButtonBs>
+    const thm = useTheme()
+    const style = css`
+      padding: 0.25rem;
+      line-height: 1;
+      font-size: ${props.fontSize}rem;
+      color: ${thm.pg.icon.color};
+      background-color: ${thm.pg.icon.bgColor};
+      &:hover {
+        color: ${thm.pg.icon.hover.color};
+        background-color: ${thm.pg.icon.hover.bgColor};
+      }
+    `
+    return <ButtonBs outline size={"sm"} css={style} {...rest}><FontAwesomeIcon icon={icon}/></ButtonBs>
 }
 
 
@@ -26,26 +39,18 @@ IconButton.defaultProps = {
 
 const DropdownList = (props) => {
     const {valueList, activeValue, onChange, disabled} = props
-    const {darkTheme} = props
-    const base = {
-        height: 'calc(1em + 0.75rem + 2px)'
-    }
-    const darkStyle = {
-        backgroundColor: 'rgba(255,255,255,.1)',
-        color: '#fff',
-        '&:focus': {
-            backgroundColor: 'rgba(255,255,255,.4)',
-            color: '#fff',
-            borderColor: '#eee',
-            boxShadow: 'none'
-        }
-    }
-    const darkOption = {
-        backgroundColor: '#343a40',
-        color: '#fff',
-    }
-    return (<InputBs type="select" css={darkTheme ? [base, darkStyle] : base} bsSize="sm" onChange={onChange} value={activeValue} disabled={disabled} >
-        {valueList.map((item, key) => <option css={darkTheme ? darkOption : ''} key={key}>{item}</option>)}
+    const thm = useTheme()
+    const selectStyle = css`
+      height: calc(1em + 0.75rem + 2px);
+      color: ${thm.pg.dropdown.color};
+      background-color: ${thm.pg.dropdown.bgColor};
+      &:focus {
+        color: ${thm.pg.dropdown.onFocus.color};
+        background-color: ${thm.pg.dropdown.onFocus.bgColor};
+      }
+    `
+    return (<InputBs type="select" css={selectStyle} bsSize="sm" onChange={onChange} value={activeValue} disabled={disabled} >
+        {valueList.map((item, key) => <option key={key}>{item}</option>)}
     </InputBs>)
 }
 DropdownList.propTypes = {
@@ -69,10 +74,18 @@ const Pagination = (props) => {
     const onChangeRowsOnPage = (value) => {
         dispatch(changeRowsOnPage(parseInt(value, 10)))
     }
-    return !showPagination ? <div></div>
-        : <div className={classNames(
-            "border rounded d-flex align-items-center justify-content-between p-1",
-            darkTheme ? "text-white bg-dark border-light" : "bg-light border-dark")} css={css`width: 300px`}>
+    const thm = useTheme()
+    const style = css`
+      width: 300px;
+      color: ${thm.pg.color};
+      background-color: ${thm.pg.bgColor};
+      border-style: solid;
+      border-width: ${thm.pg.border.width}px;
+      border-color: ${thm.pg.border.color};
+    `
+
+    return !showPagination ? <div/>
+        : <div className="rounded d-flex align-items-center justify-content-between p-1" css={style}>
             <div>
                 <IconButton icon={faFastBackward} className="mr-1" disabled={isSaving || recordsCounter === null || currentPage === 1 || isLoading} onClick={onFirstPage} />
                 <IconButton icon={faBackward} disabled={isSaving || recordsCounter === null || currentPage === 1 || isLoading} onClick={onPrevPage} />

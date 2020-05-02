@@ -1,21 +1,9 @@
 /**@jsx jsx*/
-import {css, jsx} from "@emotion/core";
+import {css, jsx} from "@emotion/core"
+import {useTheme} from "emotion-theming"
 import {useEffect, useState, useRef} from 'react'
 import axios from 'axios'
 
-const editorStyle = css`
-  background-color: #157b8d;
-  input {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background-color: inherit;
-      color: inherit;
-    }
-    input:focus {
-        outline: none;
-    }
-`
 
 
 export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
@@ -23,6 +11,23 @@ export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subs
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
     const mutableState = useRef(value)
+    const thm = useTheme()
+
+    const style = css`
+      background-color: ${thm.editor.bgColor};
+      color: ${thm.editor.color};
+      input {
+          width: 100%;
+          height: 100%;
+          border: none;
+          background-color: inherit;
+          color: inherit;
+        }
+        input:focus {
+            outline: none;
+        }
+    `
+
 
     useEffect(() => {
         subscribeOnOutsideClick(saveResult)
@@ -61,7 +66,7 @@ export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subs
         setValue(e.target.value)
     }
     return (
-        <td css={editorStyle} ref={refCellEditor}>
+        <td css={style} ref={refCellEditor}>
             {saving ? <input type="text"  value={'Saving...'} readOnly /> : <input type="text"  value={value} onChange={onChangeHandler} autoFocus />}
         </td>
     )

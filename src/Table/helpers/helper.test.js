@@ -106,7 +106,7 @@ describe('table settings test', () => {
                 globalFilter: false,
                 tableSmall: true,
                 tableStriped: true,
-                tableDark: true,
+                tableDark: false,
                 tableBordered: true,
                 tableBorderless: false,
                 tableHover: true

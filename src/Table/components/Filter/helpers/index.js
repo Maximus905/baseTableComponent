@@ -33,27 +33,8 @@ function createListFromArrayOfObjects({data, labelFieldName, valueFieldName, emp
         return acc.set(value, {value, label, checked: filterValue.includes(value) ? !selectAllState : selectAllState})
     }, new Map())
     return Array.from(resMap.values())
-    // return data.map(item => {
-    //     return  item[labelFieldName]
-    //         ? {value: item[valueFieldName], label: item[labelFieldName], checked: filterValue.includes(item[valueFieldName]) ? !selectAllState : selectAllState}
-    //         : {value: item[valueFieldName], label: emptyWildcard, checked: filterValue.includes(emptyWildcard) ? !selectAllState : selectAllState}
-    // })
 }
-// function src_createListFromArray({data, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, checkedItems = []}) {
-//     const resMap = data.reduce((acc, item) => {
-//         if (item === true) {
-//             return acc.set(item, {value: item, label: trueWildcard, checked: checkedItems.includes(item)})
-//         } else if (item === false) {
-//             return acc.set(item, {value: item, label: falseWildcard, checked: checkedItems.includes(item)})
-//         } else if (item === '' || item === null || item === undefined) {
-//             return acc.set(emptyValueWildcard, {value: emptyValueWildcard, label: emptyWildcard, checked: checkedItems.includes(emptyValueWildcard)})
-//         } else {
-//             return acc.set(item, {value: item, label: item, checked: checkedItems.includes(item)})
-//         }
-//     }, new Map())
-//     console.log('helpers', Array.from(resMap.values()))
-//     return Array.from(resMap.values())
-// }
+
 function createListFromArray({data, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard, selectAllState, filterValue}) {
     const resMap = data.reduce((acc, item) => {
         if (item === true) {
@@ -67,11 +48,6 @@ function createListFromArray({data, emptyWildcard, emptyValueWildcard, trueWildc
         }
     }, new Map())
     return Array.from(resMap.values())
-    // return data.map(item => (
-    //     item === null || item === undefined || item === ''
-    //         ? {value: emptyWildcard, label: emptyWildcard, checked: filterValue.includes(emptyWildcard) ? !selectAllState : selectAllState}
-    //         : {value: item, label: item, checked: filterValue.includes(item) ? !selectAllState : selectAllState}
-    // ))
 }
 
 export function convertFilterList ({data, labelFieldName, valueFieldName, emptyWildcard, emptyValueWildcard, trueWildcard, falseWildcard,  selectAllState = true, filterValue = []}) {

@@ -28,6 +28,7 @@
     "axios": "^0.19.2",
     "check-types": "^11.1.2",
     "classnames": "^2.2.6",
+    "emotion-theming": "^10.0.27",
     "fuse.js": "^4.0.4-beta",
     "immutable": "^4.0.0-rc.12",
     "prop-types": "^15.7.2",

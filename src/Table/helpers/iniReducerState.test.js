@@ -59,6 +59,7 @@ const result = {
     cellsInEditMode: Map(),
     isCtrlPressed: false,
     isLoading: false,
+    isSaving: false,
     invalidateWithDelay: 200,
     didInvalidate: false,
 

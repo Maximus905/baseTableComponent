@@ -1,8 +1,9 @@
 /**@jsx jsx*/
 import {css, jsx} from "@emotion/core"
+import {ThemeProvider} from "emotion-theming";
 import {useReducer, useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import axios from "axios";
+import {lightTheme as thm} from "./themes";
 import myCss from './style.module.css'
 //actions
 import {
@@ -63,7 +64,7 @@ const Table = props => {
     const {isSaving, isLoading, didInvalidate,
         showPagination, showRecordsCounter, showGlobalSearch,
         invalidateWithDelay, sorting, filters, pagination, isCtrlPressed,
-        tableSettings: {tableSmall, tableStriped, tableDark, tableBordered, tableBorderless, tableHover},
+        tableSettings: {tableSmall, tableBordered, tableBorderless},
         columnsSettings,
         dimensions: {tWidth, vScroll, tBoxWidth, tBodyBoxHeight},
         visibleColumnsOrder,
@@ -204,15 +205,36 @@ const Table = props => {
         emptyWildcard,
         updateFilterList
     }
-    // const sorter = (accessor) => (<Sorter accessor={accessor} />)
+    const hdRowCss = css`
+      th {
+        background-color: ${thm.hd.bgColor};
+        color: ${thm.hd.color}
+      }
+    `
+    const bdHdRowCss = css`
+      border: none !important;
+    `
+    const bdRowCss = css`
+      tr:nth-of-type(odd) {
+        background-color: ${thm.bd.row.odd.bgColor};
+      }
+      tr:nth-of-type(even) {
+        background-color: ${thm.bd.row.even.bgColor};
+      }
+      tr:hover {
+        color: ${thm.bd.row.hover.color};
+        background-color: ${thm.bd.row.hover.bgColor} !important;
+      }
+    `
     return (
+        <ThemeProvider theme={thm}>
         <TableContext.Provider value={context}>
             <div className={classNames(myCss.tBox, "d-flex", "flex-column", "bg-light, tBox")} ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
                 <div className={classNames(myCss.tHdBdBox, isLoading ? myCss.noScroll : '', "d-flex", "flex-column", "flex-grow-1, tHdBdBox", "position-relative")}>
                     <div className={classNames(myCss.tHdBox, "bg-light, tHdBox")} css={css`width: ${tWidth + vScroll}px`} ref={refTableHeaderBox}>
-                        <table className={classNames("table", {"table-sm": tableSmall, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
+                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead>
-                                <HeaderRow>
+                                <HeaderRow style={hdRowCss}>
                                     {() => {
                                         const cells = visibleColumnsOrder.map((accessor, idx) => {
                                             const HeaderCell = headerCells[accessor]
@@ -226,13 +248,13 @@ const Table = props => {
                         </table>
                     </div>
                     <div className={classNames(myCss.tBdBox, isLoading ? myCss.noScroll : '', "bg-light", "flex-grow-1, tBdBox")} css={css`width: ${tWidth + vScroll}px;`} ref={refTableBodyBox}>
-                        <table className={classNames("table", {"table-sm": tableSmall, "table-striped": tableStriped, "table-dark": tableDark, "table-bordered": tableBordered, "table-borderless": tableBorderless, "table-hover": tableHover }, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
+                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
                             <thead className={myCss.hiddenHeader}>
-                                <HeaderRow>
+                                <HeaderRow style={bdHdRowCss}>
                                     {() => visibleColumnsOrder.map((accessor, idx) => <SimpleHeaderCell accessor={accessor} key={idx}/>)}
                                 </HeaderRow>
                             </thead>
-                            <tbody>
+                            <tbody css={bdRowCss}>
                             {state.data.map((rowData, index) => {
                                 const selectedCellsInRow = selectedCells.get(index)
                                 return (
@@ -261,14 +283,15 @@ const Table = props => {
                         {isLoading ? <Spinner/> : null}
                     </div>
                 </div>
-                <TableFooter darkTheme={tableDark} >
-                    {showGlobalSearch ? <GlobalSearch darkTheme={tableDark} /> : <div/>}
+                <TableFooter>
+                    {showGlobalSearch ? <GlobalSearch /> : <div/>}
                     {showRecordsCounter && <RecordsCounter/>}
-                    {showPagination ? <Pagination darkTheme={tableDark} /> : <div/>}
+                    {showPagination ? <Pagination /> : <div/>}
                 </TableFooter>
             </div>
             <ScrollbarSize onLoad={(measurements) => dispatch(setScrollSizes({vScroll: measurements.scrollbarWidth, hScroll: measurements.scrollbarHeight}))}/>
         </TableContext.Provider>
+        </ThemeProvider>
     )
 }
 Table.propTypes = {
@@ -276,11 +299,8 @@ Table.propTypes = {
         width: PropTypes.number, //width of table (% from tBox)
         //bs styles for table
         tableSmall: PropTypes.bool,
-        tableStriped: PropTypes.bool,
-        tableDark: PropTypes.bool,
         tableBordered: PropTypes.bool,
         tableBorderless: PropTypes.bool,
-        tableHover: PropTypes.bool,
         //
         globalFilter: PropTypes.bool,
         customRow: PropTypes.func, // customers row React component (i.e. CustomRow)
@@ -345,7 +365,7 @@ Table.defaultProps = {
     dataCounterFieldName: 'counter',
     //
     showRecordsCounter: true,
-    showGlobalSearch: false,
+    showGlobalSearch: true,
     showTableFooter: true,
 }
 export default Table

@@ -1,17 +1,21 @@
 /**@jsx jsx*/
 import {jsx, css} from "@emotion/core"
-import classNames from 'classnames'
-import PropTypes from 'prop-types'
+import {useTheme} from "emotion-theming"
 import {useContext} from "react";
 import TableContext from "../../TableContext";
 
 const TableFooter = (props) => {
-    const {state: {dimensions, dimensions: {tWidth, tBoxWidth, vScroll}}} = useContext(TableContext)
-    const {darkTheme} = props
+    const {state: {dimensions: {tWidth, tBoxWidth, vScroll}}} = useContext(TableContext)
     const footerWidth = tWidth >= tBoxWidth ? tBoxWidth : tWidth + vScroll
-    return <div className={classNames("d-flex justify-content-between align-items-center p-1", darkTheme ? "text-white bg-dark" : "bg-light")} css={css`width: ${footerWidth}px`} >{props.children}</div>
+    const thm = useTheme()
+    const style = css`
+      width: ${footerWidth}px;
+      background-color: ${thm.ft.bgColor};
+      color: ${thm.ft.color};
+      border-top-width: ${thm.ft.border.width}px;
+      border-top-color: ${thm.ft.border.color};
+    `
+    return <div className="d-flex justify-content-between align-items-center p-1" css={style} >{props.children}</div>
 }
-TableFooter.propTypes = {
-    darkTheme: PropTypes.bool
-}
+
 export default TableFooter
