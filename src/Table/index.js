@@ -4,7 +4,7 @@ import {ThemeProvider} from "emotion-theming";
 import {useReducer, useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {lightTheme as thm} from "./themes";
-import myCss from './style.module.css'
+import statCss from "./staticStyles"
 //actions
 import {
     setScrollSizes,
@@ -18,14 +18,10 @@ import {
     changeDataInLocalStorage, savingInProcess
 } from "./actions";
 //components
-// import HeaderRow from "./components/HeaderRow"
 import DefaultHeaderRow from "./components/default/DefaultHeaderRow"
 import DefaultRow from "./components/default/DefaultRow";
-
-// import HeaderCell from "./components/HeaderCell";
 import ScrollCell from "./components/ScrollCell"
 import Spinner from "./components/Spiner";
-// import Row from "./components/Row";
 import TableFooter from "./components/TableFooter";
 
 import ft from "./constatnts/filterTypes";
@@ -35,11 +31,8 @@ import {
     app_convertFilters,
     app_convertPagination,
     iniReducerState,
-    // renderCellFunctionsFromProps,
-    // renderHeaderCellFunctionsFromProps,
     headerCellsCollection,
     bodyCellsCollection,
-    isCellSelected
 } from './helpers'
 import TableContext from "./TableContext"
 import {requestData, ctrlDown, ctrlUp} from "./actions";
@@ -226,13 +219,24 @@ const Table = props => {
         background-color: ${thm.bd.row.hover.bgColor} !important;
       }
     `
+    const tHdBoxCss = css`
+      ${statCss.tHdBox};
+      width: ${tWidth + vScroll}px;
+    `
+    const tBdBoxCss = css`
+      ${statCss.tBdBox};
+      width: ${tWidth + vScroll}px;
+      & > table {
+        width: ${tWidth}px; table-layout: fixed !important;
+      }
+    `
     return (
         <ThemeProvider theme={thm}>
         <TableContext.Provider value={context}>
-            <div className={classNames(myCss.tBox, "d-flex", "flex-column", "bg-light, tBox")} ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
-                <div className={classNames(myCss.tHdBdBox, isLoading ? myCss.noScroll : '', "d-flex", "flex-column", "flex-grow-1, tHdBdBox", "position-relative")}>
-                    <div className={classNames(myCss.tHdBox, "bg-light, tHdBox")} css={css`width: ${tWidth + vScroll}px`} ref={refTableHeaderBox}>
-                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
+            <div css={statCss.tBox} className="d-flex flex-column bg-light tBox" ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
+                <div css={statCss.tHdBdBox} className="d-flex flex-column flex-grow-1 position-relative">
+                    <div className="bg-light tHdBox" css={tHdBoxCss} ref={refTableHeaderBox}>
+                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless})} css={css`width: ${tWidth}px; table-layout: fixed !important;`}>
                             <thead>
                                 <HeaderRow style={hdRowCss}>
                                     {() => {
@@ -247,9 +251,9 @@ const Table = props => {
                             </thead>
                         </table>
                     </div>
-                    <div className={classNames(myCss.tBdBox, isLoading ? myCss.noScroll : '', "bg-light", "flex-grow-1, tBdBox")} css={css`width: ${tWidth + vScroll}px;`} ref={refTableBodyBox}>
-                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless}, myCss.fixTableSizes)} css={css`width: ${tWidth}px`}>
-                            <thead className={myCss.hiddenHeader}>
+                    <div className="bg-light flex-grow-1 tBdBox" css={tBdBoxCss} ref={refTableBodyBox}>
+                        <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless})} >
+                            <thead css={statCss.hiddenHeader}>
                                 <HeaderRow style={bdHdRowCss}>
                                     {() => visibleColumnsOrder.map((accessor, idx) => <SimpleHeaderCell accessor={accessor} key={idx}/>)}
                                 </HeaderRow>
