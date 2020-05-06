@@ -233,9 +233,9 @@ const Table = props => {
     return (
         <ThemeProvider theme={thm}>
         <TableContext.Provider value={context}>
-            <div css={statCss.tBox} className="d-flex flex-column bg-light tBox" ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
-                <div css={statCss.tHdBdBox} className="d-flex flex-column flex-grow-1 position-relative">
-                    <div className="bg-light tHdBox" css={tHdBoxCss} ref={refTableHeaderBox}>
+            <div css={statCss.tBox} className="tBox" ref={refTableBox} onKeyDown={ctrlDownHandler} onKeyUp={ctrlUpHandler} tabIndex="-1">
+                <div css={statCss.tHdBdBox} className="tHdBdBox">
+                    <div className="tHdBox" css={tHdBoxCss} ref={refTableHeaderBox}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless})} css={css`width: ${tWidth}px; table-layout: fixed !important;`}>
                             <thead>
                                 <HeaderRow style={hdRowCss}>
@@ -251,7 +251,7 @@ const Table = props => {
                             </thead>
                         </table>
                     </div>
-                    <div className="bg-light flex-grow-1 tBdBox" css={tBdBoxCss} ref={refTableBodyBox}>
+                    <div className="tBdBox bg-light " css={tBdBoxCss} ref={refTableBodyBox}>
                         <table className={classNames("table", {"table-sm": tableSmall, "table-bordered": tableBordered, "table-borderless": tableBorderless})} >
                             <thead css={statCss.hiddenHeader}>
                                 <HeaderRow style={bdHdRowCss}>
@@ -290,7 +290,7 @@ const Table = props => {
                 <TableFooter>
                     {showGlobalSearch ? <GlobalSearch /> : <div/>}
                     {showRecordsCounter && <RecordsCounter/>}
-                    {showPagination ? <Pagination /> : <div/>}
+                    {showPagination ? <div><Pagination /></div> : <div/>}
                 </TableFooter>
             </div>
             <ScrollbarSize onLoad={(measurements) => dispatch(setScrollSizes({vScroll: measurements.scrollbarWidth, hScroll: measurements.scrollbarHeight}))}/>

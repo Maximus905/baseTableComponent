@@ -8,6 +8,9 @@ export default {
           border: none !important;
       }`,
     tBox: css`
+      display: flex;
+      flex-direction: column;
+      
       height: 100%;
       min-width: 500px; /* set a minimum width for table */
       border: none; /* for example */
@@ -16,6 +19,11 @@ export default {
       }
     `,
     tHdBdBox: css`
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      
       min-height: 0;
       overflow-x: auto;
     `,
@@ -25,6 +33,7 @@ export default {
     }`,
     tBdBox: css`
         min-height: 0;
+        flex-grow: 1;
         overflow: initial;
         overflow-y: scroll;
         overflow-x: hidden;

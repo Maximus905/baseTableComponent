@@ -10,12 +10,18 @@ const TableFooter = (props) => {
     const thm = useTheme()
     const style = css`
       width: ${footerWidth}px;
+      
+      display: flex;
+      flex-shrink: 0;
+      justify-content: space-between;
+      align-items: center;
+      
       background-color: ${thm.ft.bgColor};
       color: ${thm.ft.color};
       border-top-width: ${thm.ft.border.width}px;
       border-top-color: ${thm.ft.border.color};
     `
-    return <div className="d-flex justify-content-between align-items-center p-1" css={style} >{props.children}</div>
+    return <div className="tFooterBox p-1" css={style} >{props.children}</div>
 }
 
 export default TableFooter
