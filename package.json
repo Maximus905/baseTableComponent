@@ -1,6 +1,6 @@
 {
   "name": "@rsb/simple-table",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "simple table based on bootstrap",
   "main": "lib/index.js",
   "module": "es/index.js",

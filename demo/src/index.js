@@ -25,6 +25,7 @@ const Demo = () => {
           </div>
           <div style={{height: '70vh'}} className="d-flex flex-column">
               <h5 className="align-self-center">Table 2</h5>
+              <h6 className="align-self-center">next code works only with available netcmdb server</h6>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
                   <Table {...remoteServer} />
               </div>
