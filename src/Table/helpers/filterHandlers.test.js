@@ -342,7 +342,7 @@ describe('convert filters state for sending to server', () => {
             c1: getListFilterState('c1', 'LIST', true, ['v1', 'v2'], ['l1', 'l2'], false, false)
         }
         const convertedFilters = {c1: getConvertedFilter('c1', 'NOT_IN_LIST', ['v1', 'v2'], false)}
-        const realResult = app_convertFilters({filters, emptyWildcard: '<empty>'})
+        const realResult = app_convertFilters({filters, emptyValueWildcard: '<empty>'})
         expect(realResult).toEqual(convertedFilters)
 
     })
@@ -351,7 +351,7 @@ describe('convert filters state for sending to server', () => {
             c1: getListFilterState('c1', 'LIST', true, ['v1', 'v2', '<empty>'], ['l1', 'l2'], false, false)
         }
         const convertedFilters = {c1: getConvertedFilter('c1', 'NOT_IN_LIST', ['v1', 'v2'], true)}
-        const realResult = app_convertFilters({filters, emptyWildcard: '<empty>'})
+        const realResult = app_convertFilters({filters, emptyValueWildcard: '<empty>'})
         expect(realResult).toEqual(convertedFilters)
 
     })
@@ -360,7 +360,7 @@ describe('convert filters state for sending to server', () => {
             c1: getListFilterState('c1', 'LIST', false, ['v1', 'v2'], ['l1', 'l2'], false, false)
         }
         const convertedFilters = {c1: getConvertedFilter('c1', 'IN_LIST', ['v1', 'v2'], undefined, false)}
-        const realResult = app_convertFilters({filters, emptyWildcard: '<empty>'})
+        const realResult = app_convertFilters({filters, emptyValueWildcard: '<empty>'})
         expect(realResult).toEqual(convertedFilters)
 
     })
@@ -369,7 +369,7 @@ describe('convert filters state for sending to server', () => {
             c1: getListFilterState('c1', 'LIST', false, ['v1', 'v2', '<empty>'], ['l1', 'l2'], false, false)
         }
         const convertedFilters = {c1: getConvertedFilter('c1', 'IN_LIST', ['v1', 'v2'], undefined, true)}
-        const realResult = app_convertFilters({filters, emptyWildcard: '<empty>'})
+        const realResult = app_convertFilters({filters, emptyValueWildcard: '<empty>'})
         expect(realResult).toEqual(convertedFilters)
 
     })

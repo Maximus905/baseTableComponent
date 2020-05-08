@@ -17,7 +17,7 @@ import SortIcon from "../../SortIcon";
 const emptyList = []
 
 const DefaultHeaderCell = ({accessor}) => {
-    const {state: {filters, columnsSettings, filtersSettings, dimensions: {tBodyBoxHeight}, isSaving}, dispatch, updateFilterList, emptyWildcard} = useContext(TableContext)
+    const {state: {filters, columnsSettings, filtersSettings, dimensions: {tBodyBoxHeight}, isSaving}, dispatch, updateFilterList, emptyWildcard, emptyValueWildcard} = useContext(TableContext)
     const {title, sortable, filterable, width} = columnsSettings[accessor]
     const filterList = filterable && (filters[accessor].list || emptyList)
     const loadingState = filterable && filters[accessor].isLoading
@@ -59,7 +59,7 @@ const DefaultHeaderCell = ({accessor}) => {
                         {sortable && <SortIcon accessor={accessor} />}
                     </div>
                 </div>
-                {filterable && <Filter accessor={accessor} active={isFilterActive({accessor})} disabled={isSaving} maxWidth={300} maxHeight={filterListMaxHeight} data={filterList} direction="down" filterSettings={filtersSettings[accessor]} onChangeFilter={onChangeFilterHandler} onOpen={onOpenFilter} loadingState={loadingState} emptyWildcard={emptyWildcard} />}
+                {filterable && <Filter accessor={accessor} active={isFilterActive({accessor})} disabled={isSaving} maxWidth={300} maxHeight={filterListMaxHeight} data={filterList} direction="down" filterSettings={filtersSettings[accessor]} onChangeFilter={onChangeFilterHandler} onOpen={onOpenFilter} loadingState={loadingState} emptyWildcard={emptyWildcard} emptyValueWildcard={emptyValueWildcard} />}
             </div>
         </th>
     )

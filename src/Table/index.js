@@ -46,7 +46,7 @@ import {selectCell} from "./actions"
 import {defaultTableDataLoader, defaultFilterDataLoader} from "./loaders";
 
 const Table = props => {
-    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyWildcard, dataFieldName, dataCounterFieldName } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -111,7 +111,7 @@ const Table = props => {
             const action = requestData({
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
-                filters: app_convertFilters({filters, emptyWildcard}),
+                filters: app_convertFilters({filters, emptyValueWildcard}),
                 sorting,
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
@@ -180,7 +180,7 @@ const Table = props => {
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
         if (filter.type === ft.LIST.value && filter.didInvalidate) {
-            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyWildcard}), accessor, dataFieldName: filterDataFieldName}))
+            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName}))
         }
     }
 
@@ -195,6 +195,7 @@ const Table = props => {
         filterLabelName,
         filterValueName,
         // filterCheckedName,
+        emptyValueWildcard,
         emptyWildcard,
         updateFilterList
     }
@@ -345,6 +346,7 @@ Table.propTypes = {
     filterValueName: PropTypes.string, // is used in filter list object
     filterLabelName: PropTypes.string, // is used in filter list object
     // filterCheckedName: PropTypes.string, // is used in filter list object
+    emptyValueWildcard: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     emptyWildcard: PropTypes.string,
     // getting table data
     dataFieldName: PropTypes.string,
@@ -361,6 +363,7 @@ Table.defaultProps = {
     filterValueName: 'val',
     filterLabelName: 'lab',
     // filterCheckedName: 'checked',
+    emptyValueWildcard: '',
     emptyWildcard: '<пусто>',
     // format for fetching data from server: {[dataFieldName]: data, [dataCounterFieldName]: totalCountOfData}
     //totalCountOfData is used for pagination

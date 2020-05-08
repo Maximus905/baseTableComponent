@@ -22,7 +22,7 @@ const filterList = (accessor) => {
 //demo function of fetching table data with delay
 export async function fetchTableData({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
     const data = tableData()
-    console.log('table data', url, filters, sorting, pagination, dataFieldName, dataCounterFieldName, data)
+    console.log('fetchTableData: ', {url, filters, sorting, pagination, dataFieldName, dataCounterFieldName, data})
     return new Promise(resolve => {
         setTimeout(() => resolve(data), 500)
     })
@@ -30,21 +30,21 @@ export async function fetchTableData({url, filters, sorting, pagination, dataFie
 //the same function without delay
 export async function fetchTableData_noDelay({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
     const data = tableData()
-    console.log('fetchTableData', url, filters, sorting, pagination, dataFieldName, dataCounterFieldName)
+    console.log('fetchTableData: ', {url, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
     return new Promise(resolve => resolve(data))
 }
 
 //demo function of fetching filter data with delay
 export async function fetchFilterList({url, filters, accessor, dataFieldName}) {
     const list = filterList(accessor)
-    console.log('fetchFilterList: ', url, filters, accessor, dataFieldName, list)
+    console.log('fetchFilterList: ', {url, filters, accessor, dataFieldName, list})
     return new Promise(resolve => {
         setTimeout(() => resolve(list), 500)
     })
 }
 //the same function without delay
-export async function fetchFilterList_noDelay({accessor, filters}) {
+export async function fetchFilterList_noDelay({url, filters, accessor, dataFieldName}) {
     const list = filterList(accessor)
-    console.log('filter list: ', url, filters, accessor, dataFieldName, list)
+    console.log('fetchFilterList: ', {url, filters, accessor, dataFieldName, list})
     return new Promise(resolve => resolve(list))
 }

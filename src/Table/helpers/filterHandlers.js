@@ -98,7 +98,7 @@ export const app_filters_receiveFilterList = ({filters, accessor, data}) => (
         return res
     }, {})
 )
-export const app_convertFilters = ({filters, emptyWildcard}) => {
+export const app_convertFilters = ({filters, emptyValueWildcard}) => {
     const res = Object.entries(filters).reduce((acc, [key, filter]) => {
         const {filterBy, type, value, selectAllState} = filter
 
@@ -109,13 +109,13 @@ export const app_convertFilters = ({filters, emptyWildcard}) => {
                     if (selectAllState) {
                         acc[key].filterBy = filterBy
                         acc[key].type = 'NOT_IN_LIST'
-                        acc[key].removeEmpty = value.includes(emptyWildcard)
-                        acc[key].value = value.filter(item => item !== emptyWildcard)
+                        acc[key].removeEmpty = value.includes(emptyValueWildcard)
+                        acc[key].value = value.filter(item => item !== emptyValueWildcard)
                     } else {
                         acc[key].filterBy = filterBy
                         acc[key].type = 'IN_LIST'
-                        acc[key].addEmpty = value.includes(emptyWildcard)
-                        acc[key].value = value.filter(item => item !== emptyWildcard)
+                        acc[key].addEmpty = value.includes(emptyValueWildcard)
+                        acc[key].value = value.filter(item => item !== emptyValueWildcard)
                     }
                 }
                 break

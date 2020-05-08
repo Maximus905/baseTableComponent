@@ -6,6 +6,8 @@ import {Cell1} from "../customComponents/Cell1"
 const config = {
     tableDataLoader: fetchTableData,
     filterDataLoader: fetchFilterList,
+    tableDataUrl: 'http://table.data.url',
+    filterDataUrl: 'http://filter.data.url',
     columns: [
         {
             accessor: 'column1',
