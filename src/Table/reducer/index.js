@@ -54,17 +54,18 @@ import {changeSelectedCells} from "../helpers";
  * @return {Function}
  */
 export function dispatchMiddleware(dispatch) {
-    async function getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
+    async function getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) {
         dispatch(loadingData())
         try {
             const data = await fetchFunction({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
             if (check.array(data)) {
-                dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false}))
+                dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false, isTableMountedRef}))
             } else if (check.object(data) && check.array(data[dataFieldName])) {
                 dispatch(receiveData({
                     data: data[dataFieldName],
                     recordsCounter: check.number(data[dataCounterFieldName]) ? data[dataCounterFieldName] : null,
-                    showPagination: check.number(data[dataCounterFieldName])
+                    showPagination: check.number(data[dataCounterFieldName]),
+                    isTableMountedRef
                 }))
             } else {
                 console.log('Table: Invalid format of fetched data: ', data, dataFieldName, dataCounterFieldName, data[dataCounterFieldName] )
@@ -73,10 +74,10 @@ export function dispatchMiddleware(dispatch) {
 
         } catch (e) {
             alert(e.toString())
-            dispatch(receiveData({data: [], recordsCounter: null, showPagination: false}))
+            dispatch(receiveData({data: [], recordsCounter: null, showPagination: false, isTableMountedRef}))
         }
     }
-    async function getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName}) {
+    async function getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef}) {
         dispatch(loadingFilterList(accessor))
         const tmp = Object.keys(filters).reduce((acc, key) => {
             if (key !==accessor) acc[key] = filters[key]
@@ -88,20 +89,20 @@ export function dispatchMiddleware(dispatch) {
                 console.log('Table: Error fetching filter data: ', data)
                 throw  new Error('Table: Error fetching filter data from server!')
             }
-            dispatch(receiveFilterList({accessor, data}))
+            dispatch(receiveFilterList({accessor, data, isTableMountedRef}))
         } catch (e) {
             alert(e.toString())
-            dispatch(receiveFilterList({accessor, data:[]}))
+            dispatch(receiveFilterList({accessor, data:[], isTableMountedRef}))
         }
     }
     return (action) => {
         const {type, payload} = action
-        const {url, fetchFunction, filters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName} = payload || {}
+        const {url, fetchFunction, filters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName, isTableMountedRef} = payload || {}
         switch (type) {
             case REQUEST_DATA:
-                return getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
+                return getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef})
             case REQUEST_FILTER_LIST:
-                return getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName})
+                return getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef})
             default:
                 return dispatch(action)
         }
@@ -110,7 +111,7 @@ export function dispatchMiddleware(dispatch) {
 export const rootReducer = (state, action) => {
     const {payload, type} = action
     const {isSaving, dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate, cellsInEditMode} = state
-    const {rowId, accessor, data, value} = payload || {}
+    const {rowId, accessor, data, value, isTableMountedRef} = payload || {}
     const newState = {}
     switch (type) {
         case CTRL_DOWN:
@@ -144,7 +145,9 @@ export const rootReducer = (state, action) => {
         case LOADING_DATA:
             return {...state, isLoading: true, didInvalidate: false}
         case RECEIVE_DATA:
-            return {...state, isLoading: false, didInvalidate: false, data: payload.data, pagination: app_updatePagination({pagination, recordsCounter: payload.recordsCounter})}
+            return isTableMountedRef.current ?
+                {...state, isLoading: false, didInvalidate: false, data: payload.data, pagination: app_updatePagination({pagination, recordsCounter: payload.recordsCounter})} :
+                state
         case CHANGE_FILTER:
             const result = {...state,
                 ...app_changeFilter({state, accessor: payload.accessor, type: payload.type, value: payload.value, selectAllState: payload.selectAllState})
@@ -153,7 +156,9 @@ export const rootReducer = (state, action) => {
         case LOADING_FILTER_LIST:
             return {...state, filters: app_filters_setFilterInLoadingState({filters: state.filters, accessor: payload})}
         case RECEIVE_FILTER_LIST:
-            return {...state, filters: app_filters_receiveFilterList({filters: state.filters, accessor: payload.accessor, data: payload.data})}
+            return isTableMountedRef.current ?
+                {...state, filters: app_filters_receiveFilterList({filters: state.filters, accessor: payload.accessor, data: payload.data})} :
+                state
         // pagination's actions
         case FIRST_PAGE:
             return {...state, pagination: {...pagination, currentPage: 1}, invalidateWithDelay: TIMEOUT_CHANGE_PAGE_IN_PAGINATION}

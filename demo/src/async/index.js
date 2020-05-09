@@ -24,7 +24,7 @@ export async function fetchTableData({url, filters, sorting, pagination, dataFie
     const data = tableData()
     console.log('fetchTableData: ', {url, filters, sorting, pagination, dataFieldName, dataCounterFieldName, data})
     return new Promise(resolve => {
-        setTimeout(() => resolve(data), 500)
+        setTimeout(() => resolve(data), 2000)
     })
 }
 //the same function without delay
@@ -39,7 +39,7 @@ export async function fetchFilterList({url, filters, accessor, dataFieldName}) {
     const list = filterList(accessor)
     console.log('fetchFilterList: ', {url, filters, accessor, dataFieldName, list})
     return new Promise(resolve => {
-        setTimeout(() => resolve(list), 500)
+        setTimeout(() => resolve(list), 2000)
     })
 }
 //the same function without delay
