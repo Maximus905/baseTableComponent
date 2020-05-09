@@ -69,6 +69,7 @@ const Table = props => {
     const refTableBodyBox = useRef(null)
     const refCellEditor = useRef(null)
     const outsideClickHandlers = useRef(new Set())
+    const isTableMountedRef = useRef(false)
     const subscribeOnOutsideClick = (handler) => {
         outsideClickHandlers.current.add(handler)
     }
@@ -90,6 +91,11 @@ const Table = props => {
             document.removeEventListener('click', handlerClickOutside)
         }
     })
+    useEffect(() => {
+        isTableMountedRef.current = true
+        return () => isTableMountedRef.current = false
+    }, []);
+
 
     useEffect(() => {
         if (isLoading === false) onResizeHandler()
@@ -115,11 +121,20 @@ const Table = props => {
                 sorting,
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
-                dataCounterFieldName
+                dataCounterFieldName,
+                isTableMountedRef
             })
             asyncDispatch(action)
         }
     }, [isLoading, didInvalidate, isCtrlPressed])
+
+    // filters list handle
+    const updateFilterList = ({accessor}) => {
+        const filter = filters[accessor]
+        if (filter.type === ft.LIST.value && filter.didInvalidate) {
+            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName, isTableMountedRef}))
+        }
+    }
 
     useEffect(() => {
     }, [filters]);
@@ -176,13 +191,6 @@ const Table = props => {
     function setIsSaving(status) {
         dispatch(savingInProcess(status))
     }
-    // filters list handle
-    const updateFilterList = ({accessor}) => {
-        const filter = filters[accessor]
-        if (filter.type === ft.LIST.value && filter.didInvalidate) {
-            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName}))
-        }
-    }
 
     const context = {
         state,
@@ -194,10 +202,10 @@ const Table = props => {
         filterDataLoader,
         filterLabelName,
         filterValueName,
-        // filterCheckedName,
         emptyValueWildcard,
         emptyWildcard,
-        updateFilterList
+        updateFilterList,
+        isTableMountedRef
     }
     const hdRowCss = css`
       th {

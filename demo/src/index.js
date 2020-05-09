@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import {render} from 'react-dom'
 import Table from "../../src";
@@ -9,12 +9,14 @@ import config_customCell_1 from "./config/config_customCell_1"
 
 // minHeight style is very important for the deepest container because container is flex!!!
 const Demo = () => {
+    const [showTable, setShowTable] = useState(true)
   return (
       <div style={{height: '100vh'}}>
           <div style={{height: '40vh'}} className="d-flex flex-column">
               <h5 className="align-self-center">Table 1</h5>
+              <button onClick={() => setShowTable(!showTable)}>Show/hide table</button>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
-                <Table {...simpleConfig} />
+                  {showTable && <Table {...simpleConfig} />}
               </div>
           </div>
           <div style={{height: '40vh'}} className="d-flex flex-column">
