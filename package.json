@@ -1,6 +1,6 @@
 {
   "name": "@rsb/simple-table",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "simple table based on bootstrap",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -24,7 +24,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
-    "@rsb/dropdown-list": "^1.0.2",
+    "@rsb/dropdown-list": "^1.0.3",
     "axios": "^0.19.2",
     "check-types": "^11.1.2",
     "classnames": "^2.2.6",

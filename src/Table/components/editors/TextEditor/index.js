@@ -6,7 +6,7 @@ import axios from 'axios'
 
 
 
-export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}) => {
+export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl, errorFieldName}) => {
     const url = saveChangesUrl || tableDataUrl
     const [value, setValue] = useState(rowData[accessor])
     const [saving, setSaving] = useState(false)
@@ -50,11 +50,13 @@ export const TextEditor = ({accessor, rowData, rowId, width, refCellEditor, subs
             if (serverResponse.status === 200) {
                 saveChangesLocally({rowId, rowData, accessor, cellData: mutableState.current})
             } else {
-                throw new Error(serverResponse.data.toString())
+                throw new Error(serverResponse.data[errorFieldName] && serverResponse.data[errorFieldName].toString())
             }
         } catch (e) {
-            console.log(e.toString())
-            alert(e.toString())
+            if (e.message) {
+                console.log(e.message)
+                alert(e.message)
+            }
         }
         setSaving(false)
         setIsSaving(false)

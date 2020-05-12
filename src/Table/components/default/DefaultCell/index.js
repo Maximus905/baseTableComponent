@@ -16,10 +16,12 @@ const DefaultCell = (
         onDoubleClickHandler,
         refCellEditor,
         subscribeOnOutsideClick, unsubscribeFromOutsideClick,
-        setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
+        setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl,
+        errorFieldName
+    }
 ) => (
     editMode && Editor ?
-        <Editor {...{accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl, tBodyHeight}} /> :
+        <Editor {...{accessor, rowData, rowId, width, refCellEditor, subscribeOnOutsideClick, unsubscribeFromOutsideClick, setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, errorFieldName, filterDataUrl, tBodyHeight}} /> :
         <td onClick={onClickHandler} onDoubleClick={onDoubleClickHandler} css={selected ? selectedCss : null}>
             {rowData[accessor]}
         </td>

@@ -1,6 +1,9 @@
+/**@jsx jsx*/
+import {jsx} from '@emotion/core'
 import ft from "../constants/filterTypes"
 import {fetchTableData, fetchFilterList} from "../async";
 import {TextEditor, DropdownEditor} from "../../../src/Table";
+const DDEditor = (props) => <DropdownEditor minWidthOfList={100} {...props} />
 
 const config = {
     // tableDataLoader: fetchTableData,
@@ -32,7 +35,7 @@ const config = {
             sortable: true,
             // filterable: true,
             editable: true,
-            editor: DropdownEditor
+            editor: DDEditor
         }
     ]
 }

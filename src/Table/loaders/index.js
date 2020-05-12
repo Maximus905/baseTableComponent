@@ -5,8 +5,8 @@ export const defaultTableDataLoader = async ({url, filters, sorting, pagination,
         const res = await axios.get(url, {
             params: {filters, sorting, pagination}
         })
-        if (!Array.isArray(res.data[dataFieldName])) {
-            console.log('invalid data from server: ', res)
+        if (res.status !== 200 || !Array.isArray(res.data[dataFieldName])) {
+            console.log('Error fetching data from server: ', res)
             throw new Error('Error fetching data from server')
         }
         return res.data
@@ -20,7 +20,7 @@ export const defaultFilterDataLoader = async ({url, filters, accessor, dataField
         const res = await axios.get(url, {
             params: {accessor, filters}
         })
-        if (!Array.isArray(res.data[dataFieldName])) {
+        if (res.status !== 200 || !Array.isArray(res.data[dataFieldName])) {
             console.log('invalid data from server: ', res)
             throw new Error('Error fetching filter list from server')
         }

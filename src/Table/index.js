@@ -46,7 +46,7 @@ import {selectCell} from "./actions"
 import {defaultTableDataLoader, defaultFilterDataLoader} from "./loaders";
 
 const Table = props => {
-    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName, errorFieldName } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -122,6 +122,7 @@ const Table = props => {
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
                 dataCounterFieldName,
+                errorFieldName,
                 isTableMountedRef
             })
             asyncDispatch(action)
@@ -132,7 +133,7 @@ const Table = props => {
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
         if (filter.type === ft.LIST.value && filter.didInvalidate) {
-            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName, isTableMountedRef}))
+            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName, errorFieldName, isTableMountedRef}))
         }
     }
 
@@ -285,7 +286,9 @@ const Table = props => {
                                                 onDoubleClickHandler: onDoubleClickCellHandler({rowId, accessor}),
                                                 refCellEditor,
                                                 subscribeOnOutsideClick, unsubscribeFromOutsideClick,
-                                                setIsSaving, stopEdit, saveChangesLocally, saveChangesUrl, tableDataUrl, filterDataUrl}
+                                                setIsSaving, stopEdit, saveChangesLocally,
+                                                saveChangesUrl, tableDataUrl, filterDataUrl,
+                                                errorFieldName}
                                             return <Cell {...cellProps} key={index} />
                                         })}
                                     </BodyRow>
@@ -359,6 +362,7 @@ Table.propTypes = {
     // getting table data
     dataFieldName: PropTypes.string,
     dataCounterFieldName: PropTypes.string,
+    errorFieldName: PropTypes.string,
     //
     showRecordsCounter: PropTypes.bool,
     showGlobalSearch: PropTypes.bool,
@@ -378,6 +382,7 @@ Table.defaultProps = {
     //if data is fetched as array (bare data) - pagination will be turned off
     dataFieldName: 'data',
     dataCounterFieldName: 'counter',
+    errorFieldName: 'error',
     //
     showRecordsCounter: true,
     showGlobalSearch: true,

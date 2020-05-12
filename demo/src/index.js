@@ -4,7 +4,7 @@ import {render} from 'react-dom'
 import Table from "../../src";
 import simpleConfig from "./config/simpleConfig"
 import config_customCell_1 from "./config/config_customCell_1"
-// import remoteServer from "./config/withRemoteServerConfig"
+import remoteServer from "./config/withRemoteServerConfig"
 
 
 // minHeight style is very important for the deepest container because container is flex!!!
@@ -25,13 +25,13 @@ const Demo = () => {
                   <Table {...config_customCell_1} />
               </div>
           </div>
-          {/*<div style={{height: '70vh'}} className="d-flex flex-column">*/}
-          {/*    <h5 className="align-self-center">Table 2</h5>*/}
-          {/*    <h6 className="align-self-center">next code works only with available netcmdb server</h6>*/}
-          {/*    <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>*/}
-          {/*        <Table {...remoteServer} />*/}
-          {/*    </div>*/}
-          {/*</div>*/}
+          <div style={{height: '70vh'}} className="d-flex flex-column">
+              <h5 className="align-self-center">Table 2</h5>
+              <h6 className="align-self-center">next code works only with available netcmdb server</h6>
+              <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
+                  <Table {...remoteServer} />
+              </div>
+          </div>
       </div>
   )
 }
