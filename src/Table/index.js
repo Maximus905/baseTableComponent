@@ -318,7 +318,6 @@ Table.propTypes = {
         tableBordered: PropTypes.bool,
         tableBorderless: PropTypes.bool,
         //
-        globalFilter: PropTypes.bool,
         customRow: PropTypes.func, // customers row React component (i.e. CustomRow)
         customHeaderRow: PropTypes.func, // customers row React component (i.e. CustomHeaderRow)
     }),

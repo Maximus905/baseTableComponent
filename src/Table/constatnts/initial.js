@@ -35,13 +35,9 @@ export const initialState = {
 }
 export const tableSettingsTemplate = {
     width: 100,
-    globalFilter: false,
     tableSmall: true,
-    tableStriped: true,
-    tableDark: false,
     tableBordered: true,
     tableBorderless: false,
-    tableHover: true
 }
 export const oneColumnSettingsTemplate = {
     title: '',

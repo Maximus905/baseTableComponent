@@ -16,7 +16,6 @@ const getConfig = () => ({
     tableDataLoader: () => {},
     filterDataLoader: ({accessor, filters}) => {},
     table: {
-        tableDark: true,
         tableSmall: true,
         tableBordered: true,
         renderRow: () => 'render row',
@@ -49,7 +48,6 @@ const getConfigWithListFilter = () => ({
     tableDataLoader: () => {},
     filterDataLoader: ({accessor, filters}) => {},
     table: {
-        tableDark: true,
         tableSmall: true,
         tableBordered: true,
         renderRow: () => 'render row',
@@ -85,13 +83,9 @@ describe('table settings test', () => {
         expect(tableSettingsFromProps(config)).toEqual(
             {
                 width: 100,
-                globalFilter: false,
-                tableSmall: true,
-                tableStriped: true,
-                tableDark: true,
                 tableBordered: true,
                 tableBorderless: false,
-                tableHover: true
+                tableSmall: true
             }
         )
         config.table.tableSmall = false
@@ -103,13 +97,9 @@ describe('table settings test', () => {
         expect(tableSettingsFromProps(config)).toEqual(
             {
                 width: 100,
-                globalFilter: false,
                 tableSmall: true,
-                tableStriped: true,
-                tableDark: false,
                 tableBordered: true,
                 tableBorderless: false,
-                tableHover: true
             }
         )
     })

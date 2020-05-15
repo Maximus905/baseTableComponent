@@ -6,7 +6,6 @@ const getConfig = () => ({
     tableDataLoader: () => {},
     filterDataLoader: ({accessor, filters}) => {},
     table: {
-        tableDark: false,
         tableSmall: true,
         tableBordered: true,
         renderRow: () => 'render row',
@@ -80,13 +79,9 @@ const result = {
 
     tableSettings: {
         width: 100,
-        globalFilter: false,
         tableSmall: true,
-        tableStriped: true,
-        tableDark: false,
         tableBordered: true,
         tableBorderless: false,
-        tableHover: true
     },
     columnsSettings: {
         title_1: {
