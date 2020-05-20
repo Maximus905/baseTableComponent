@@ -35,9 +35,9 @@ export async function fetchTableData_noDelay({url, filters, extFilters, sorting,
 }
 
 //demo function of fetching filter data with delay
-export async function fetchFilterList({url, filters, accessor, dataFieldName}) {
+export async function fetchFilterList({url, filters, extFilters, accessor, dataFieldName}) {
     const list = filterList(accessor)
-    console.log('fetchFilterList: ', {url, filters, accessor, dataFieldName, list})
+    console.log('fetchFilterList: ', {url, filters, extFilters, accessor, dataFieldName, list})
     return new Promise(resolve => {
         setTimeout(() => resolve(list), 2000)
     })

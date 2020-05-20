@@ -121,7 +121,7 @@ const Table = props => {
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
                 filters: app_convertFilters({filters, emptyValueWildcard}),
-                extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
+                // extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
                 sorting,
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
@@ -137,7 +137,12 @@ const Table = props => {
     const updateFilterList = ({accessor}) => {
         const filter = filters[accessor]
         if (filter.type === ft.LIST.value && filter.didInvalidate) {
-            asyncDispatch(requestFilterList({url: filterDataUrl, fetchFunction: filterDataLoader, filters: app_convertFilters({filters, emptyValueWildcard}), accessor, dataFieldName: filterDataFieldName, errorFieldName, isTableMountedRef}))
+            asyncDispatch(requestFilterList({
+                url: filterDataUrl,
+                fetchFunction: filterDataLoader,
+                filters: app_convertFilters({filters, emptyValueWildcard}),
+                extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
+                accessor, dataFieldName: filterDataFieldName, errorFieldName, isTableMountedRef}))
         }
     }
 

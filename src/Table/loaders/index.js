@@ -15,10 +15,10 @@ export const defaultTableDataLoader = async ({url, filters, extFilters, sorting,
         return []
     }
 }
-export const defaultFilterDataLoader = async ({url, filters, accessor, dataFieldName}) => {
+export const defaultFilterDataLoader = async ({url, filters, extFilters, accessor, dataFieldName}) => {
     try {
         const res = await axios.get(url, {
-            params: {accessor, filters}
+            params: {accessor, filters, extFilters, dataFieldName}
         })
         if (res.status !== 200 || !Array.isArray(res.data[dataFieldName])) {
             console.log('invalid data from server: ', res)

@@ -31,6 +31,6 @@ export const receiveData = ({data, recordsCounter, showPagination, isTableMounte
 // export const invalidateData = () => ({type: INVALIDATE_DATA})
 
 export const loadingFilterList = (accessor) => ({type: LOADING_FILTER_LIST, payload: accessor})
-export const requestFilterList = ({url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef}) => ({type: REQUEST_FILTER_LIST, payload: {url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef}})
+export const requestFilterList = ({url, fetchFunction, filters, extFilters, accessor, dataFieldName, isTableMountedRef}) => ({type: REQUEST_FILTER_LIST, payload: {url, fetchFunction, filters, extFilters, accessor, dataFieldName, isTableMountedRef}})
 export const receiveFilterList = ({accessor, data, isTableMountedRef}) => ({type: RECEIVE_FILTER_LIST, payload: {accessor, data, isTableMountedRef}})
 export const invalidateFilterList = (accessor) => ({type: INVALIDATE_FILTER_LIST, payload: accessor})

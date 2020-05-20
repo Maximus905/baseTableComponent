@@ -80,14 +80,14 @@ export function dispatchMiddleware(dispatch) {
 
         }
     }
-    async function getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef}) {
+    async function getFilterList({dispatch, url, fetchFunction, filters, extFilters, accessor, dataFieldName, isTableMountedRef}) {
         dispatch(loadingFilterList(accessor))
         const tmp = Object.keys(filters).reduce((acc, key) => {
             if (key !==accessor) acc[key] = filters[key]
             return acc
         }, {})
         try {
-            const data = await fetchFunction({url, filters: tmp, accessor, dataFieldName})
+            const data = await fetchFunction({url, filters: tmp, extFilters, accessor, dataFieldName})
             if (check.not.array(data)) {
                 console.log('Table: Error fetching filter data: ', data)
                 throw  new Error('Table: Error fetching filter data from server!')
@@ -108,7 +108,7 @@ export function dispatchMiddleware(dispatch) {
             case REQUEST_DATA:
                 return getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef})
             case REQUEST_FILTER_LIST:
-                return getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef})
+                return getFilterList({dispatch, url, fetchFunction, filters, extFilters, accessor, dataFieldName, isTableMountedRef})
             default:
                 return dispatch(action)
         }
