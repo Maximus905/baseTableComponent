@@ -54,10 +54,10 @@ import {changeSelectedCells} from "../helpers";
  * @return {Function}
  */
 export function dispatchMiddleware(dispatch) {
-    async function getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) {
+    async function getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) {
         dispatch(loadingData())
         try {
-            const data = await fetchFunction({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
+            const data = await fetchFunction({url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName})
             if (check.array(data) && isTableMountedRef.current) {
                 dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false, isTableMountedRef}))
             } else if (check.object(data) && check.array(data[dataFieldName]) && isTableMountedRef.current) {
@@ -103,10 +103,10 @@ export function dispatchMiddleware(dispatch) {
     }
     return (action) => {
         const {type, payload} = action
-        const {url, fetchFunction, filters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName, isTableMountedRef} = payload || {}
+        const {url, fetchFunction, filters, extFilters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName, isTableMountedRef} = payload || {}
         switch (type) {
             case REQUEST_DATA:
-                return getData({dispatch, url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef})
+                return getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef})
             case REQUEST_FILTER_LIST:
                 return getFilterList({dispatch, url, fetchFunction, filters, accessor, dataFieldName, isTableMountedRef})
             default:

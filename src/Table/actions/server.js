@@ -15,12 +15,13 @@ export const loadingData = () => ({type: LOADING_DATA})
  * @param url
  * @param {any} fetchFunction
  * @param {Object} filters - from reducer state
+ * @param {Object} extFilters - from props
  * @param {Object} sorting - from reducer state
  * @param pagination
  * @param dataFieldName
  * @param dataCounterFieldName
  */
-export const requestData = ({url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) => ({type: REQUEST_DATA, payload: {url, fetchFunction, filters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}})
+export const requestData = ({url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) => ({type: REQUEST_DATA, payload: {url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}})
 /**
  *
  * @param {Object}

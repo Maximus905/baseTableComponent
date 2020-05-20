@@ -44,9 +44,10 @@ import GlobalSearch from "./components/GlobalSearch";
 import RecordsCounter from "./components/RecordsCounter";
 import {selectCell} from "./actions"
 import {defaultTableDataLoader, defaultFilterDataLoader} from "./loaders";
+import {TIMEOUT_CHANGE_EXT_FILTER} from "./constatnts/timeouts";
 
 const Table = props => {
-    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName, errorFieldName } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName, errorFieldName, extFilters, passThrowExtFilter } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -96,7 +97,9 @@ const Table = props => {
         return () => isTableMountedRef.current = false
     }, []);
 
-
+    useEffect(() => {
+        if (!isLoading && !didInvalidate) invalidateDataWithTimeout(TIMEOUT_CHANGE_EXT_FILTER)
+    }, [extFilters])
     useEffect(() => {
         if (isLoading === false) onResizeHandler()
     }, [isLoading])
@@ -118,6 +121,7 @@ const Table = props => {
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
                 filters: app_convertFilters({filters, emptyValueWildcard}),
+                extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
                 sorting,
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
@@ -344,6 +348,16 @@ Table.propTypes = {
         type: PropTypes.oneOf(Object.keys(ft)),
         allowedTypes: PropTypes.arrayOf(PropTypes.string), // array of available operators [keys of ft object]
     }),
+    extFilters: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.shape({
+            selectAll: PropTypes.bool,
+            filterBy: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+            type: PropTypes.oneOf(Object.keys(ft)),
+            value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]))
+        })),
+        PropTypes.any
+    ]), //external filter for table
+    passThrowExtFilters: PropTypes.bool, //if true - extFilters will be passed to server as is, else will be converted as table's filter
     tableDataLoader: PropTypes.func, // async function ({url, filters, sorting, pagination}) => {} should return array of objects like {'accessor: 'value'}
     custom: PropTypes.objectOf(PropTypes.any),
     //urls
@@ -386,6 +400,8 @@ Table.defaultProps = {
     showRecordsCounter: true,
     showGlobalSearch: true,
     showTableFooter: true,
+    //
+    passThrowExtFilter: true
 }
 export default Table
 export {TextEditor} from './components/editors/TextEditor'

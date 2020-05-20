@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-export const defaultTableDataLoader = async ({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) => {
+export const defaultTableDataLoader = async ({url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName}) => {
     try {
         const res = await axios.get(url, {
-            params: {filters, sorting, pagination}
+            params: {filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName}
         })
         if (res.status !== 200 || !Array.isArray(res.data[dataFieldName])) {
             console.log('Error fetching data from server: ', res)

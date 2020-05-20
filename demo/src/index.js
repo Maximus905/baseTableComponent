@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import {render} from 'react-dom'
 import Table from "../../src";
@@ -10,6 +10,8 @@ import remoteServer from "./config/withRemoteServerConfig"
 // minHeight style is very important for the deepest container because container is flex!!!
 const Demo = () => {
     const [showTable, setShowTable] = useState(true)
+    const [extFilter, setExtFilter] = useState('ext - 1')
+    useEffect(() => console.log('extFilter: ', extFilter), [extFilter])
   return (
       <div style={{height: '100vh'}}>
           <div style={{height: '40vh'}} className="d-flex flex-column">
@@ -21,8 +23,9 @@ const Demo = () => {
           </div>
           <div style={{height: '40vh'}} className="d-flex flex-column">
               <h5 className="align-self-center">Table 2</h5>
+              <button onClick={() => setExtFilter(extFilter + '1')}>change extFilter</button>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
-                  <Table {...config_customCell_1} />
+                  <Table {...config_customCell_1} extFilters={extFilter} />
               </div>
           </div>
           <div style={{height: '70vh'}} className="d-flex flex-column">

@@ -20,15 +20,15 @@ const filterList = (accessor) => {
     }
 }
 //demo function of fetching table data with delay
-export async function fetchTableData({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
+export async function fetchTableData({url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
     const data = tableData()
-    console.log('fetchTableData: ', {url, filters, sorting, pagination, dataFieldName, dataCounterFieldName, data})
+    console.log('fetchTableData: ', {url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, data})
     return new Promise(resolve => {
         setTimeout(() => resolve(data), 2000)
     })
 }
 //the same function without delay
-export async function fetchTableData_noDelay({url, filters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
+export async function fetchTableData_noDelay({url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName}) {
     const data = tableData()
     console.log('fetchTableData: ', {url, filters, sorting, pagination, dataFieldName, dataCounterFieldName})
     return new Promise(resolve => resolve(data))
