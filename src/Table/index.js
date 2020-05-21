@@ -308,11 +308,11 @@ const Table = props => {
                         {isLoading ? <Spinner/> : null}
                     </div>
                 </div>
-                <TableFooter>
+                {(showGlobalSearch || showRecordsCounter || showPagination) && <TableFooter>
                     {showGlobalSearch ? <GlobalSearch /> : <div/>}
                     {showRecordsCounter && <RecordsCounter/>}
-                    {showPagination ? <div><Pagination /></div> : <div/>}
-                </TableFooter>
+                    {showPagination && <div><Pagination /></div>}
+                </TableFooter>}
             </div>
             <ScrollbarSize onLoad={(measurements) => dispatch(setScrollSizes({vScroll: measurements.scrollbarWidth, hScroll: measurements.scrollbarHeight}))}/>
         </TableContext.Provider>

@@ -25,14 +25,14 @@ const Demo = () => {
               <h5 className="align-self-center">Table 2</h5>
               <button onClick={() => setExtFilter(extFilter + '1')}>change extFilter</button>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
-                  <Table {...config_customCell_1} extFilters={extFilter} />
+                  <Table {...config_customCell_1} extFilters={extFilter} showGlobalSearch={false} />
               </div>
           </div>
           <div style={{height: '70vh'}} className="d-flex flex-column">
               <h5 className="align-self-center">Table 2</h5>
               <h6 className="align-self-center">next code works only with available netcmdb server</h6>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
-                  <Table {...remoteServer} extFilters={extFilter}/>
+                  <Table {...remoteServer} extFilters={extFilter} />
               </div>
           </div>
       </div>

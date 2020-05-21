@@ -27,7 +27,7 @@ export const requestData = ({url, fetchFunction, filters, extFilters, sorting, p
  * @param {Object}
  * @return {{type: string, payload: Object}}
  */
-export const receiveData = ({data, recordsCounter, showPagination, isTableMountedRef}) => ({type: RECEIVE_DATA, payload: {data, recordsCounter, showPagination, isTableMountedRef}})
+export const receiveData = ({data, recordsCounter, showPagination, showRecordsCounter, isTableMountedRef}) => ({type: RECEIVE_DATA, payload: {data, recordsCounter, showPagination, showRecordsCounter, isTableMountedRef}})
 // export const invalidateData = () => ({type: INVALIDATE_DATA})
 
 export const loadingFilterList = (accessor) => ({type: LOADING_FILTER_LIST, payload: accessor})

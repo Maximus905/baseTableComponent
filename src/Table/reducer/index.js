@@ -64,6 +64,7 @@ export function dispatchMiddleware(dispatch) {
                 dispatch(receiveData({
                     data: data[dataFieldName],
                     recordsCounter: check.number(data[dataCounterFieldName]) ? data[dataCounterFieldName] : null,
+                    showRecordsCounter: check.number(data[dataCounterFieldName]),
                     showPagination: check.number(data[dataCounterFieldName]),
                     isTableMountedRef
                 }))
@@ -117,7 +118,7 @@ export function dispatchMiddleware(dispatch) {
 export const rootReducer = (state, action) => {
     const {payload, type} = action
     const {isSaving, dimensions, columnsSettings, sorting, filters, pagination, filtersSettings, didInvalidate, cellsInEditMode} = state
-    const {rowId, accessor, data, value} = payload || {}
+    const {rowId, accessor, data, value, showPagination, showRecordsCounter} = payload || {}
     switch (type) {
         case CTRL_DOWN:
             return {...state, isCtrlPressed: true}
@@ -150,7 +151,7 @@ export const rootReducer = (state, action) => {
         case LOADING_DATA:
             return {...state, isLoading: true, didInvalidate: false}
         case RECEIVE_DATA:
-            return {...state, isLoading: false, didInvalidate: false, data: payload.data, pagination: app_updatePagination({pagination, recordsCounter: payload.recordsCounter})}
+            return {...state, isLoading: false, didInvalidate: false, data: payload.data, pagination: app_updatePagination({pagination, recordsCounter: payload.recordsCounter}), showPagination, showRecordsCounter}
         case CHANGE_FILTER:
             const result = {...state,
                 ...app_changeFilter({state, accessor: payload.accessor, type: payload.type, value: payload.value, selectAllState: payload.selectAllState})
