@@ -121,7 +121,7 @@ const Table = props => {
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
                 filters: app_convertFilters({filters, emptyValueWildcard}),
-                // extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
+                extFilters: passThrowExtFilter ? extFilters : app_convertFilters({filters: extFilters, emptyValueWildcard}),
                 sorting,
                 pagination: app_convertPagination({pagination}),
                 dataFieldName,
