@@ -1,7 +1,7 @@
 const tableData = () => Array.from(Array(10), () => 0).map((value, index) => (
     {
         id: index,
-        column1: `col 1 - data ${index}`,
+        column1: `col 1 - data ${index} verylongstringverylongstringverylongstringverylongstringverylongstring`,
         column2: `col 2 - data ${index}`,
         column3: `col 3 - data ${index}`,
         column4: `col 4 - data ${index}`,
