@@ -56,7 +56,7 @@ our server should send table data in structure like:
     [dataCounterFieldName]: number_of_records
 }
 ```
-* __getFilterList__ - async function fetched data for filters of LIST type
+* __filterDataLoader__ - async function fetched data for filters of LIST type
   * default loader:
   ```javascript
   const defaultFilterDataLoader = async ({url, filters, extFilters, accessor, dataFieldName}) => {
@@ -94,6 +94,12 @@ our server should send table data in structure like:
     selectAll: true/false // this field is required only for LIST type
   }
   ``` 
+* __api__ - usually empty object that will be filled after mounting table by useful methods
+  * __api.reload__ update table's data with current settings(filters, sorting etc.)
+* __onBeforeRequestData__ (function) is called before loading data from a server (without any arguments). 
+* __onAfterSuccessfulRequestData__ (function) is called after successful loading data from a server (without any arguments).
+* __onAfterFailedRequestData__ (function) is called after failed loading data from a server (without any arguments).
+* __onAfterRequestData__ (function) is called after either successful or failed loading data from a server (without any arguments).
 #### Filter types:
 * type: EQ, label: '=', filterName: 'равно'},
 * type: NE, label: '!=', filterName: 'не равно'},

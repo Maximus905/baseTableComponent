@@ -21,7 +21,7 @@ export const loadingData = () => ({type: LOADING_DATA})
  * @param dataFieldName
  * @param dataCounterFieldName
  */
-export const requestData = ({url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) => ({type: REQUEST_DATA, payload: {url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}})
+export const requestData = ({url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData}) => ({type: REQUEST_DATA, payload: {url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData}})
 /**
  *
  * @param {Object}

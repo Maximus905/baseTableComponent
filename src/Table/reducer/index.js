@@ -54,12 +54,13 @@ import {changeSelectedCells} from "../helpers";
  * @return {Function}
  */
 export function dispatchMiddleware(dispatch) {
-    async function getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef}) {
+    async function getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData}) {
         dispatch(loadingData())
         try {
             const data = await fetchFunction({url, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName})
             if (check.array(data) && isTableMountedRef.current) {
                 dispatch(receiveData({data: data, recordsCounter: data.length, showPagination: false, isTableMountedRef}))
+                if (check.function(onAfterSuccessfulRequestData)) onAfterSuccessfulRequestData()
             } else if (check.object(data) && check.array(data[dataFieldName]) && isTableMountedRef.current) {
                 dispatch(receiveData({
                     data: data[dataFieldName],
@@ -68,15 +69,17 @@ export function dispatchMiddleware(dispatch) {
                     showPagination: check.number(data[dataCounterFieldName]),
                     isTableMountedRef
                 }))
+                if (check.function(onAfterSuccessfulRequestData)) onAfterSuccessfulRequestData()
             } else if (isTableMountedRef.current) {
                 console.log('Table: Invalid format of fetched data: ', data, dataFieldName, dataCounterFieldName, data[dataCounterFieldName] )
                 throw  new Error('Table: Invalid format of fetched data from server!')
             }
-
+            if (check.function(onAfterRequestData)) onAfterRequestData()
         } catch (e) {
             if (isTableMountedRef.current) {
                 alert(e.toString())
                 dispatch(receiveData({data: [], recordsCounter: null, showPagination: false, isTableMountedRef}))
+                if (check.function(onAfterFailedRequestData)) onAfterFailedRequestData()
             }
 
         }
@@ -104,10 +107,10 @@ export function dispatchMiddleware(dispatch) {
     }
     return (action) => {
         const {type, payload} = action
-        const {url, fetchFunction, filters, extFilters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName, isTableMountedRef} = payload || {}
+        const {url, fetchFunction, filters, extFilters, sorting, pagination, accessor, dataFieldName, dataCounterFieldName, isTableMountedRef, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData} = payload || {}
         switch (type) {
             case REQUEST_DATA:
-                return getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef})
+                return getData({dispatch, url, fetchFunction, filters, extFilters, sorting, pagination, dataFieldName, dataCounterFieldName, isTableMountedRef, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData})
             case REQUEST_FILTER_LIST:
                 return getFilterList({dispatch, url, fetchFunction, filters, extFilters, accessor, dataFieldName, isTableMountedRef})
             default:

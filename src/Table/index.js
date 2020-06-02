@@ -5,6 +5,7 @@ import {useReducer, useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {lightTheme as thm} from "./themes";
 import statCss from "./staticStyles"
+import check from 'check-types'
 //actions
 import {
     setScrollSizes,
@@ -47,7 +48,7 @@ import {defaultTableDataLoader, defaultFilterDataLoader} from "./loaders";
 import {TIMEOUT_CHANGE_EXT_FILTER} from "./constatnts/timeouts";
 
 const Table = props => {
-    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName, errorFieldName, extFilters, passThrowExtFilter } = props
+    const {tableDataUrl, saveChangesUrl, filterDataUrl, tableDataLoader, filterDataLoader, table, columns, filterDataFieldName, filterLabelName, filterValueName, emptyValueWildcard, emptyWildcard, dataFieldName, dataCounterFieldName, errorFieldName, extFilters, passThrowExtFilter, api, onBeforeRequestData, onAfterSuccessfulRequestData, onAfterFailedRequestData, onAfterRequestData } = props
     const {customHeaderRow, customRow} = table || {}
     const HeaderRow = customHeaderRow || DefaultHeaderRow
     const BodyRow = customRow || DefaultRow
@@ -87,6 +88,9 @@ const Table = props => {
 
     }
     useEffect(() => {
+        if (check.object(api)) api.reload = (delay = 0) => invalidateDataWithTimeout(delay)
+    })
+    useEffect(() => {
         document.addEventListener('click', handlerClickOutside)
         return function () {
             document.removeEventListener('click', handlerClickOutside)
@@ -117,6 +121,7 @@ const Table = props => {
     // reload data table according to isLoading and didInvalidate
     useEffect(() => {
         if (!isLoading && didInvalidate && !isCtrlPressed) {
+            if (check.function(onBeforeRequestData)) onBeforeRequestData()
             const action = requestData({
                 url: tableDataUrl,
                 fetchFunction: tableDataLoader,
@@ -127,7 +132,10 @@ const Table = props => {
                 dataFieldName,
                 dataCounterFieldName,
                 errorFieldName,
-                isTableMountedRef
+                isTableMountedRef,
+                onAfterSuccessfulRequestData,
+                onAfterFailedRequestData,
+                onAfterRequestData
             })
             asyncDispatch(action)
         }
@@ -385,6 +393,11 @@ Table.propTypes = {
     showRecordsCounter: PropTypes.bool,
     showGlobalSearch: PropTypes.bool,
     showTableFooter: PropTypes.bool,
+    api: PropTypes.object,
+    onBeforeRequestData: PropTypes.func,
+    onAfterSuccessfulRequestData: PropTypes.func,
+    onAfterFailedRequestData: PropTypes.func,
+    onAfterRequestData: PropTypes.func,
 }
 Table.defaultProps = {
     tableDataLoader: defaultTableDataLoader,
@@ -406,7 +419,11 @@ Table.defaultProps = {
     showGlobalSearch: true,
     showTableFooter: true,
     //
-    passThrowExtFilter: true
+    passThrowExtFilter: true,
+    onBeforeRequestData: () => {},
+    onAfterSuccessfulRequestData: () => {},
+    onAfterFailedRequestData: () => {},
+    onAfterRequestData: () => {},
 }
 export default Table
 export {TextEditor} from './components/editors/TextEditor'
