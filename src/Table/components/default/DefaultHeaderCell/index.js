@@ -53,7 +53,7 @@ const DefaultHeaderCell = ({accessor}) => {
     return (
         <th css={thCss} className={classNames('align-top')} onClick={!isSaving && sortable ? handlerOnClick : undefined} >
             <div className={classNames('d-flex', 'justify-content-between')}>
-                <div className={classNames('d-flex', 'justify-content-start')}>
+                <div className={classNames('d-flex', 'justify-content-start', 'text-break')}>
                     {title}
                     <div css={iconWrapCss} className={classNames('d-flex', 'justify-content-around', 'align-items-center')}>
                         {sortable && <SortIcon accessor={accessor} />}

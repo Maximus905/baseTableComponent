@@ -38,9 +38,7 @@ const ItemsBox = (props) => {
     const fuseOption = {
         shouldSort: true,
         threshold: 0.15,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 32,
+        ignoreLocation: true,
         minMatchCharLength: 1,
         keys: [
             'label'
@@ -63,8 +61,7 @@ const ItemsBox = (props) => {
 
     const fuseFilter = (template) => {
         if (!template) return data
-        const res =  fuse.search(template)
-        return  res
+        return fuse.search(template).map(item => item.item)
     }
 
     // const filteredData = dataFilter(inputValue)

@@ -11,3 +11,11 @@
 * added api, onBeforeRequestData and onAfterSuccessfulRequestData properties. See readme for more explanations.
 ##1.0.16
 * added onAfterFailedRequestData and onAfterRequestData properties
+##1.0.17
+* fixed long distance search (location and distance disabled)
+##1.0.18
+* fuse.js updated to 6 major version
+##1.0.19
+* @rsb/dropdown-list updated
+##1.0.20
+* changed style of header cell

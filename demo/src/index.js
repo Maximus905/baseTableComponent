@@ -15,7 +15,7 @@ const Demo = () => {
     useEffect(() => console.log('extFilter: ', extFilter), [extFilter])
   return (
       <div style={{height: '100vh'}}>
-          <div style={{height: '40vh'}} className="d-flex flex-column">
+          <div style={{height: '60vh'}} className="d-flex flex-column">
               <h5 className="align-self-center">Table 1</h5>
               <div className="container-fluid">
                   <button className="btn btn-info w-25" onClick={() => setShowTable(!showTable)}>Show/hide table</button>
@@ -39,7 +39,7 @@ const Demo = () => {
               <h5 className="align-self-center">Table 2</h5>
               <h6 className="align-self-center">next code works only with available netcmdb server</h6>
               <div className="container-fluid flex-grow-1" style={{minHeight: '0px', height: '100%'}}>
-                  <Table {...remoteServer} extFilters={extFilter} onBeforeRequestData={() => {console.log('before fetching 2')}} onAfterSuccessfulRequestData={() => console.log('after success fetching 2')} />
+                  <Table {...remoteServer} showPagination={false} extFilters={extFilter} onBeforeRequestData={() => {console.log('before fetching 2')}} onAfterSuccessfulRequestData={() => console.log('after success fetching 2')} />
               </div>
           </div>
       </div>

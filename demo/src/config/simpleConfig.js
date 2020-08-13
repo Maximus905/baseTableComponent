@@ -23,9 +23,9 @@ const config = {
         },
         {
             accessor: 'column2',
-            title: 'column 2 not filterable',
-            minWidth: 400,
-            maxWidth: 500,
+            title: 'column 2 not filterable and_very_long_name_very_very',
+            minWidth: 200,
+            maxWidth: 250,
             sortable: true,
             // filterable: true
         }
