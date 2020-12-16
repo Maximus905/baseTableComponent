@@ -1,6 +1,6 @@
 {
-  "name": "@rsb/simple-table",
-  "version": "1.0.20",
+  "name": "@maximus905/simple-table",
+  "version": "1.0.0",
   "description": "simple table based on bootstrap",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -10,6 +10,9 @@
     "lib",
     "umd"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
@@ -24,7 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
-    "@rsb/dropdown-list": "^1.0.9",
+    "@maximus905/dropdown-list": "^1.0.0",
     "axios": "^0.19.2",
     "check-types": "^11.1.2",
     "classnames": "^2.2.6",
